@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Car {
+  id             String    @id @default(cuid())
+  githubUsername String    @unique
+  githubId       Int?
+  avatarUrl      String?
+  name           String?
+  bio            String?
+
+  // Trait data (see lib/traits.ts for shape)
+  traits         Json
+  statsSnapshot  Json
+  totalCommits   Int       @default(0)
+  rarityScore    Int
+  rarityTier     String // "common" | "rare" | "epic" | "legendary" | "mythic"
+
+  // Mint state
+  mintedAt       DateTime?
+  tokenId        Int?      @unique
+  mintTxHash     String?
+  ownerAddress   String?
+  imageUrl       String?
+
+  // Share + analytics
+  shareCount     Int       @default(0)
+  viewCount      Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([rarityTier, createdAt])
+  @@index([mintedAt])
+  @@index([rarityScore])
+  @@index([totalCommits])
+}

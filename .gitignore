@@ -1,0 +1,23 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+desktop.ini
+.vercel
+.turbo
+dist/
+out/
+coverage/
+.prisma/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local agent tooling installed for documentation generation
+.claude/
+
+# Private launch planning notes
+HACKATHON.md
+LAUNCH_POST.md
