@@ -3,8 +3,15 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://admon.peerfix.dev'),
   title: 'Admon - verified GitHub build history on Monad',
   description: 'Turn public GitHub activity into a verifiable onchain build record tied to your wallet.',
+  applicationName: 'Admon',
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [{ url: '/icon', type: 'image/png', sizes: '512x512' }],
+    apple: [{ url: '/apple-icon', type: 'image/png', sizes: '180x180' }],
+  },
   openGraph: {
     title: 'Admon',
     description: 'Verified GitHub build history, minted as a Monad NFT.',
