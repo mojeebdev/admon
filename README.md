@@ -1,86 +1,72 @@
 # Admon
 
-Admon gives public GitHub build history a verifiable onchain record. A builder signs in with GitHub, Admon derives transparent traits from public activity, and a wallet-bound NFT mint stores the result on Monad Mainnet. The vehicle is the shareable artifact; the identity check, traits, and transaction are the proof.
+Admon turns a builder's public GitHub activity into a wallet-bound build record on Monad Mainnet. GitHub OAuth confirms that the builder controls the profile before a record can be minted, protecting public work from impersonation.
 
-## Documentation
+- Live app: [admon.peerfix.dev](https://admon.peerfix.dev)
+- Garage: [admon.peerfix.dev/garage](https://admon.peerfix.dev/garage)
+- OpenSea collection: [Admon](https://opensea.io/collection/admon)
+- Verified Monad contract: [`0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63)
 
-- [stacks.md](./stacks.md) is the repository's source-cited technical stack brief, generated using the [StackBrief workflow](https://www.npmjs.com/package/@blindspotlab/stackbrief).
-- [HACKATHON.md](./HACKATHON.md) tracks the Spark requirements and remaining submission evidence.
-- [LAUNCH_POST.md](./LAUNCH_POST.md) contains the prepared public launch post.
+## What it does
+
+- Confirms a builder's GitHub identity with read-only OAuth.
+- Reads only public GitHub signals: commits, streaks, repositories, stars, languages, and account age.
+- Creates a transparent Build Score and a vehicle trait set from those signals.
+- Mints one ERC-721 proof per GitHub username on Monad Mainnet.
+- Links verified mints to Monadscan and OpenSea.
+
+Admon never requests private-repository access, GitHub write access, or a wallet private key. See the in-app [privacy page](https://admon.peerfix.dev/privacy) for the data boundary and builder-protection rationale.
 
 ## Stack
 
-- Next.js 15, React 19, and TypeScript
-- Prisma and Supabase Postgres plus Storage
-- GitHub OAuth with signed, HTTP-only sessions
-- Viem and Wagmi with an injected wallet connector
-- Monad Mainnet, chain ID 143
-- ERC-721 contract with server-issued EIP-712 mint authorization
-- Custom SVG vehicle rendering and server-generated share cards
+Next.js 15, TypeScript, Prisma, Supabase Postgres and Storage, GitHub OAuth, Viem, Wagmi, Monad Mainnet, and an ERC-721 contract with server-issued EIP-712 mint authorization.
 
-## Local setup
+[stacks.md](./stacks.md) contains the source-cited technical stack brief generated with [StackBrief](https://www.npmjs.com/package/@blindspotlab/stackbrief).
 
-1. Copy .env.example to .env and supply the application values. Prisma CLI reads the root .env file; Next.js reads it too. You may use .env.local for Next-only overrides, but keep DATABASE_URL and DIRECT_URL in .env for Prisma.
-2. Create a GitHub OAuth App with callback URL:
+## Run locally
 
-   http://localhost:3000/api/github/callback
+1. Copy `.env.example` to `.env`, supply the required credentials, and set `NEXT_PUBLIC_APP_URL=http://localhost:3000`.
+2. Create a public Supabase Storage bucket named `cars`.
+3. Register `http://localhost:3000/api/github/callback` as the GitHub OAuth callback URL for local work.
+4. Install dependencies and sync the database:
 
-3. Create a public Supabase Storage bucket named cars, then install dependencies and apply the Prisma schema:
-
+   ```bash
    npm install
    npx prisma db push
-
-4. Start the app:
-
    npm run dev
+   ```
 
-## Deploy to Vercel
+## Deploy
 
-1. Import the `mojeebdev/admon` repository into Vercel. Next.js is detected automatically, so no `vercel.json` file is required.
-2. Add every value from `.env.example` as a Vercel environment variable. Keep `NEXT_ADMON_CONTRACT_ADDRESS` empty until the Remix deployment is verified.
-3. Deploy, then set `NEXT_PUBLIC_APP_URL` to the final HTTPS Vercel domain and redeploy.
-4. In your GitHub OAuth App, add this exact callback URL:
+Deploy the `mojeebdev/admon` repository to Vercel. Set every variable in `.env.example`, especially:
 
-   https://YOUR_VERCEL_DOMAIN/api/github/callback
+- `NEXT_PUBLIC_APP_URL=https://admon.peerfix.dev`
+- `NEXT_ADMON_CONTRACT_ADDRESS=0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`
+- `NEXT_PUBLIC_LAUNCH_POST_URL` after publishing the Admon launch post, so builder shares include it.
 
-5. Send the final domain here after it is live so the production URL can be checked.
+Register this production GitHub OAuth callback URL:
 
-## Deploy and verify with Remix
+```text
+https://admon.peerfix.dev/api/github/callback
+```
 
-You deploy and verify the contract manually. The deployable source is contracts/Admon.sol.
+## Spark submission checklist
 
-1. Open contracts/Admon.sol in Remix, compiling with Solidity 0.8.24 and OpenZeppelin Contracts v5 imports enabled.
-2. Connect Remix to Monad Mainnet, chain ID 143.
-3. Deploy Admon with:
-   - initialBaseURI: https://YOUR_APP_URL/api/metadata/
-   - initialAuthorizedSigner: the public address for MONAD_AUTHORIZER_PRIVATE_KEY
-4. Verify the contract yourself through the Monad Mainnet explorer.
-5. In the hosted application, set NEXT_ADMON_CONTRACT_ADDRESS to the verified deployment address. Do not use a NEXT_PUBLIC contract environment variable.
-6. Redeploy the web app and complete a real GitHub OAuth to Mainnet mint before submitting.
+Admon is a Monad Mainnet submission. Submit these fields:
 
-The contract address is public by nature, but it is deliberately read server-side from NEXT_ADMON_CONTRACT_ADDRESS and passed only where the mint UI needs it.
+- **Name:** Admon
+- **Description:** Wallet-bound proof of public GitHub build history.
+- **Problem:** Builders need a credible, portable way to prove public work without letting others mint their identity.
+- **Solution:** GitHub OAuth verifies account control, then Admon turns transparent public signals into a wallet-bound Monad NFT.
+- **Project URL:** https://admon.peerfix.dev
+- **GitHub repository:** https://github.com/mojeebdev/admon
+- **Category:** Monad Mainnet
+- **Contract:** `0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`
+- **Demo video:** Public URL, three minutes or less.
+- **Social post URL:** Required only for the Most Viral Solution prize.
 
-## User flow
+Before submitting, complete a real GitHub verification and Mainnet mint. Spark judges check for live functionality, meaningful commit history, and absence of placeholder or fake interactions.
 
-1. Connect GitHub with OAuth.
-2. Admon reads public profile, repository, star, and commit activity.
-3. Review the generated build record and vehicle traits.
-4. Connect an injected wallet on Monad Mainnet.
-5. The server signs a ten-minute EIP-712 authorization for that GitHub profile and wallet.
-6. The wallet mints the ERC-721. The app verifies the Monad receipt, stores the owner and transaction, and generates a share card.
+## License
 
-## Routes
-
-- /: problem-led verification landing page
-- /commitcar: public proof garage. This route remains for backward-compatible links.
-- /commitcar/[username]: individual proof, mint, and share card
-- /api/github/*: OAuth login, callback, session, and logout
-- /api/build: authenticated public GitHub analysis
-- /api/mint-authorization: wallet-bound EIP-712 authorization
-- /api/finalize-mint: Monad receipt verification and share-card persistence
-- /api/metadata/[username]: ERC-721 metadata
-- /api/og/[username]: PNG share image
-
-## Spark submission
-
-Read HACKATHON.md before submitting. The judging agent checks for static placeholder data and fake interactions, so do not submit until the hosted app, GitHub OAuth, database, share card, and Mainnet mint all work with real credentials.
+MIT. See [LICENSE](./LICENSE).

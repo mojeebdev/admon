@@ -39,7 +39,7 @@ export default async function GaragePage({
           <nav className="hall__filters" aria-label="Filter build records by rarity">
             {TIERS.map((value) => {
               const active = (tier ?? 'all') === value;
-              const href = value === 'all' ? '/commitcar' : `/commitcar?tier=${value}`;
+              const href = value === 'all' ? '/garage' : `/garage?tier=${value}`;
               return (
                 <Link key={value} href={href} className={`hall__filter ${active ? 'active' : ''}`}>
                   {value}
@@ -66,7 +66,7 @@ export default async function GaragePage({
               });
               const dataUri = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
               return (
-                <Link key={car.id} href={`/commitcar/${car.githubUsername}`} className="hall__card">
+                <Link key={car.id} href={`/garage/${car.githubUsername}`} className="hall__card">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={dataUri} alt={`Admon vehicle for ${car.githubUsername}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
                   <div className="hall__card__meta">
@@ -83,10 +83,21 @@ export default async function GaragePage({
         )}
       </main>
       <footer className="footer-minimal">
-        <span className="footer-minimal__mark">Admon.</span>
+        <span className="footer-minimal__brand">
+          <svg className="footer-minimal__logo" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 14.5h18" />
+            <path d="M5.5 14V10.5L10 7h5.5l3 3v4" />
+            <circle cx="8" cy="15.5" r="1.75" />
+            <circle cx="17" cy="15.5" r="1.75" />
+          </svg>
+          <span className="footer-minimal__mark">Admon.</span>
+        </span>
         <div className="footer-minimal__links">
           <Link href="/">Verify your history</Link>
+          <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
         </div>
         <span className="footer-minimal__copy">Built on Monad Mainnet</span>
       </footer>

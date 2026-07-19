@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Navbar } from '@/app/components/nav/Navbar';
 import { renderCarSVG } from '@/app/lib/carRenderer';
 import { RARITY_LABELS, type CarTraits, type StatsSnapshot } from '@/app/lib/traits';
+import { openSeaAssetUrl } from '@/app/lib/monad';
 
 interface GitHubIdentity {
   authenticated: boolean;
@@ -149,10 +150,17 @@ export default function HomePage() {
                 <span className="stat__l">Build records created</span>
               </div>
             </div>
-            <div className="hero-actions">
+            <div className="hero-cta-block">
+              <div className="cta-cluster">
               <a className="btn-primary" href={primaryHref}>
                 {identity?.authenticated ? 'Verify my build history ↓' : 'Connect GitHub to verify →'}
               </a>
+              {stats?.lastMint?.tokenId != null && stats.contract && (
+                <a className="btn-ghost" href={openSeaAssetUrl(stats.contract, stats.lastMint.tokenId)} target="_blank" rel="noreferrer">
+                  Check latest NFT on OpenSea
+                </a>
+              )}
+              </div>
               <span className="hero-note">GitHub OAuth · Public data only</span>
             </div>
             <MintTicker lastMint={stats?.lastMint ?? null} />
@@ -272,7 +280,7 @@ function MintTicker({
   }
 
   return (
-    <Link href={`/commitcar/${encodeURIComponent(lastMint.username)}`} className="mint-ticker" aria-label={`View the latest mint by ${lastMint.username}`}>
+    <Link href={`/garage/${encodeURIComponent(lastMint.username)}`} className="mint-ticker" aria-label={`View the latest mint by ${lastMint.username}`}>
       <span className="mint-ticker__label">Latest mint</span>
       <span className="mint-ticker__username">@{lastMint.username}</span>
       <span className="mint-ticker__token">{lastMint.tokenId ? `Token #${lastMint.tokenId}` : 'Mint confirmed'}</span>
@@ -288,11 +296,11 @@ function LiveStats({ stats }: { stats: LiveStats | null }) {
   return (
     <section className="live-stats" aria-label="Admon protocol totals">
       <div className="live-stats__inner">
-        <Link href="/commitcar" className="live-stats__stat">
+        <Link href="/garage" className="live-stats__stat">
           <span className="live-stats__n">{stats.totalBuilt.toLocaleString()}</span>
           <span className="live-stats__l">Build records</span>
         </Link>
-        <Link href="/commitcar" className="live-stats__stat">
+        <Link href="/garage" className="live-stats__stat">
           <span className="live-stats__n">{stats.onChainMinted.toLocaleString()}</span>
           <span className="live-stats__l">Minted on Monad</span>
         </Link>
@@ -315,11 +323,21 @@ function LiveStats({ stats }: { stats: LiveStats | null }) {
 function Footer() {
   return (
     <footer className="footer-minimal">
-      <span className="footer-minimal__mark">Admon.</span>
+      <span className="footer-minimal__brand">
+        <svg className="footer-minimal__logo" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 14.5h18" />
+          <path d="M5.5 14V10.5L10 7h5.5l3 3v4" />
+          <circle cx="8" cy="15.5" r="1.75" />
+          <circle cx="17" cy="15.5" r="1.75" />
+        </svg>
+        <span className="footer-minimal__mark">Admon.</span>
+      </span>
       <div className="footer-minimal__links">
-        <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a>
-        <Link href="/commitcar">Garage</Link>
+        <Link href="/garage">Garage</Link>
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/terms">Terms</Link>
       </div>
       <span className="footer-minimal__copy monad-badge">Built on Monad Mainnet</span>
     </footer>

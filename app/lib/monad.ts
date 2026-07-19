@@ -28,6 +28,7 @@ export const monadMainnet = defineChain({
 
 export const MONAD_CHAIN = monadMainnet;
 export const MONAD_EXPLORER_URL = monadMainnet.blockExplorers.default.url;
+export const OPENSEA_COLLECTION_URL = 'https://opensea.io/collection/admon';
 
 export function contractAddress() {
   return process.env.NEXT_ADMON_CONTRACT_ADDRESS as `0x${string}` | undefined;
@@ -35,4 +36,8 @@ export function contractAddress() {
 
 export function appUrl() {
   return (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+}
+
+export function openSeaAssetUrl(contract: string, tokenId: number) {
+  return `https://opensea.io/assets/monad/${contract}/${tokenId}`;
 }

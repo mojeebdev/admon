@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       rarityScore,
       mintedAt: car.mintedAt,
       tokenId: car.tokenId,
-      permalink: `/commitcar/${car.githubUsername}`,
+      permalink: `/garage/${car.githubUsername}`,
     });
   } catch (err: any) {
     console.error('[api/build] error:', err);

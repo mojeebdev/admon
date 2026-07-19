@@ -23,7 +23,7 @@ export async function GET(
       name: `Admon / @${car.githubUsername}`,
       description: `Verified public GitHub build history for @${car.githubUsername}. ${stats.commits365d.toLocaleString()} commits in the last year, minted on Monad.`,
       image: car.imageUrl || `${base}/api/og/${encodeURIComponent(car.githubUsername)}`,
-      external_url: `${base}/commitcar/${encodeURIComponent(car.githubUsername)}`,
+      external_url: `${base}/garage/${encodeURIComponent(car.githubUsername)}`,
       attributes: [
         { trait_type: 'Rarity', value: rarity.label },
         { trait_type: 'Chassis', value: traits.chassis },

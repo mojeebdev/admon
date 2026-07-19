@@ -2,6 +2,19 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Blindspotlab',
+  url: 'https://blindspotlab.xyz',
+  founder: {
+    '@type': 'Person',
+    name: 'Mojeeb Titilayo',
+    jobTitle: 'Founder',
+    description: 'Mojeeb Titilayo is the founder of Blindspotlab, the organization behind Admon.',
+  },
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://admon.peerfix.dev'),
   title: 'Admon - verified GitHub build history on Monad',
@@ -29,6 +42,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

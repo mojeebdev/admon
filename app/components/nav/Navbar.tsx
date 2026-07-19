@@ -21,7 +21,7 @@ export function Navbar() {
       <span className="nav-terminal__path">{path}</span>
       <div className="nav-terminal__actions">
         <span className="nav-terminal__status" title="Monad Mainnet">● MONAD</span>
-        <Link href="/commitcar" className={pathname?.startsWith('/commitcar') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
+        <Link href="/garage" className={pathname?.startsWith('/garage') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
           [GARAGE]
         </Link>
         <WalletConnect />

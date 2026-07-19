@@ -9,7 +9,7 @@ import {
   useWriteContract,
 } from 'wagmi';
 import type { CarTraits } from '@/app/lib/traits';
-import { MONAD_CHAIN, MONAD_EXPLORER_URL } from '@/app/lib/monad';
+import { MONAD_CHAIN, openSeaAssetUrl } from '@/app/lib/monad';
 
 const ADMON_ABI = [
   {
@@ -60,7 +60,7 @@ export function MintButton({ username, traits, alreadyMinted, tokenId, contractA
   if (alreadyMinted && tokenId != null) {
     return (
       <a
-        href={`${MONAD_EXPLORER_URL}/token/${contract}?a=${tokenId}`}
+        href={contract ? openSeaAssetUrl(contract, tokenId) : 'https://opensea.io/collection/admon'}
         target="_blank"
         rel="noreferrer"
         className="btn-ghost"

@@ -6,7 +6,7 @@ import { Navbar } from '@/app/components/nav/Navbar';
 import { renderCarSVG } from '@/app/lib/carRenderer';
 import { RARITY_LABELS, type CarTraits, type StatsSnapshot } from '@/app/lib/traits';
 import { MintButton } from '@/app/components/car/MintButton';
-import { appUrl, contractAddress, MONAD_EXPLORER_URL } from '@/app/lib/monad';
+import { appUrl, contractAddress, MONAD_EXPLORER_URL, openSeaAssetUrl } from '@/app/lib/monad';
 
 export const revalidate = 60;
 
@@ -59,10 +59,14 @@ export default async function ProofPage({
     background: 'void',
   });
   const dataUri = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-  const recordUrl = `${appUrl()}/commitcar/${encodeURIComponent(car.githubUsername)}`;
+  const recordUrl = `${appUrl()}/garage/${encodeURIComponent(car.githubUsername)}`;
   const shareText = `My public GitHub build history is verified onchain with Admon: @${car.githubUsername}`;
-  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(recordUrl)}`;
+  const launchPostUrl = process.env.NEXT_PUBLIC_LAUNCH_POST_URL?.trim();
+  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(launchPostUrl ? `${shareText}\n\nMy proof: ${recordUrl}` : shareText)}&url=${encodeURIComponent(launchPostUrl || recordUrl)}`;
   const contract = contractAddress();
+  const openSeaUrl = car.mintedAt && car.tokenId != null && contract
+    ? openSeaAssetUrl(contract, car.tokenId)
+    : null;
 
   prisma.car.update({
     where: { id: car.id },
@@ -109,7 +113,8 @@ export default async function ProofPage({
               Download share card
             </a>
             <a href={shareUrl} target="_blank" rel="noreferrer" className="btn-ghost">Share on X</a>
-            <Link href="/commitcar" className="btn-ghost">Browse garage</Link>
+            {openSeaUrl && <a href={openSeaUrl} target="_blank" rel="noreferrer" className="btn-ghost">View on OpenSea</a>}
+            <Link href="/garage" className="btn-ghost">Browse garage</Link>
           </div>
 
           {car.mintTxHash && (
@@ -124,8 +129,16 @@ export default async function ProofPage({
         </article>
       </main>
       <footer className="footer-minimal">
-        <span className="footer-minimal__mark">Admon.</span>
-        <div className="footer-minimal__links"><Link href="/">Verify a build history</Link><a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a></div>
+        <span className="footer-minimal__brand">
+          <svg className="footer-minimal__logo" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 14.5h18" />
+            <path d="M5.5 14V10.5L10 7h5.5l3 3v4" />
+            <circle cx="8" cy="15.5" r="1.75" />
+            <circle cx="17" cy="15.5" r="1.75" />
+          </svg>
+          <span className="footer-minimal__mark">Admon.</span>
+        </span>
+        <div className="footer-minimal__links"><Link href="/">Verify a build history</Link><a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a><a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
         <span className="footer-minimal__copy">Built on Monad Mainnet</span>
       </footer>
     </div>

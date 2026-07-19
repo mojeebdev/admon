@@ -58,7 +58,7 @@ export async function generateCarPng(car: {
 
     <text x="60" y="560" font-family="Georgia" font-size="42" font-weight="700" fill="#F0F0F8">@${escapeXml(car.githubUsername)}</text>
     <text x="60" y="590" font-family="Azeret Mono" font-size="18" font-weight="400" fill="#8A8A9A">${stats.commits365d.toLocaleString()} commits · ${stats.publicRepos} repos · ${escapeXml(stats.topLanguage)}</text>
-    <text x="1140" y="590" text-anchor="end" font-family="monospace" font-size="16" font-weight="400" fill="#4A4A5A">admon.xyz · Monad Mainnet</text>
+    <text x="1140" y="590" text-anchor="end" font-family="monospace" font-size="16" font-weight="400" fill="#4A4A5A">admon.peerfix.dev · Monad Mainnet</text>
   </svg>`;
 
   const resvg = new Resvg(shareSvg, {

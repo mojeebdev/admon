@@ -17,7 +17,3 @@ next-env.d.ts
 
 # Local agent tooling installed for documentation generation
 .claude/
-
-# Private launch planning notes
-HACKATHON.md
-LAUNCH_POST.md
