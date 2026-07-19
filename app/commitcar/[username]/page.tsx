@@ -82,7 +82,14 @@ export default async function ProofPage({
             <div>
               <p className="hall__eyebrow">Admon build proof / Monad Mainnet</p>
               <h1 className="car-page__title">
-                @{car.githubUsername}
+                <a
+                  href={`https://github.com/${encodeURIComponent(car.githubUsername)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${car.githubUsername}'s GitHub profile`}
+                >
+                  @{car.githubUsername}
+                </a>
               </h1>
               {car.name && <p className="car-page__name">{car.name}</p>}
             </div>
