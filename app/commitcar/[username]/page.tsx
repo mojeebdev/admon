@@ -78,36 +78,46 @@ export default async function ProofPage({
       <Navbar />
       <main className="car-page">
         <article className="car-page__card">
-          <header style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', marginBottom: 25 }}>
+          <header className="car-page__header">
             <div>
               <p className="hall__eyebrow">Admon build proof / Monad Mainnet</p>
-              <h1 style={{ marginTop: 6, fontFamily: 'var(--font-display)', fontSize: 'clamp(35px, 5vw, 54px)', letterSpacing: '-.045em', lineHeight: 1, color: 'var(--ink-primary)' }}>
+              <h1 className="car-page__title">
                 @{car.githubUsername}
               </h1>
-              {car.name && <p style={{ marginTop: 7, color: 'var(--ink-secondary)', fontSize: 14 }}>{car.name}</p>}
+              {car.name && <p className="car-page__name">{car.name}</p>}
             </div>
-            <span className="hall__card__rarity" style={{ color: rarity.color, background: `${rarity.color}1f`, padding: '8px 11px' }}>
+            <span className="car-page__rarity" style={{ color: rarity.color, background: `${rarity.color}1f` }}>
               {rarity.label}{car.mintedAt ? ' · minted' : ' · verified'}
             </span>
           </header>
 
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={dataUri}
-            alt={`Admon vehicle created from ${car.githubUsername}'s public GitHub build history`}
-            style={{ display: 'block', width: '100%', height: 'auto', border: '1px solid var(--void-05)' }}
-          />
+          <section className="car-page__showcase" aria-label="Vehicle and public build signals">
+            <div className="car-page__vehicle">
+              <p className="car-page__panel-label">Generated vehicle</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={dataUri}
+                alt={`Admon vehicle created from ${car.githubUsername}'s public GitHub build history`}
+              />
+            </div>
 
-          <div className="car-page__stats">
-            <div><p className="car-page__stat__label">Commits / 365d</p><p className="car-page__stat__value">{stats.commits365d.toLocaleString()}</p></div>
-            <div><p className="car-page__stat__label">Public repos</p><p className="car-page__stat__value">{stats.publicRepos}</p></div>
-            <div><p className="car-page__stat__label">Longest streak</p><p className="car-page__stat__value">{stats.longestStreak}d</p></div>
-            <div><p className="car-page__stat__label">Total stars</p><p className="car-page__stat__value">{stats.totalStars.toLocaleString()}</p></div>
-            <div><p className="car-page__stat__label">Top language</p><p className="car-page__stat__value">{stats.topLanguage}</p></div>
-            <div><p className="car-page__stat__label">Peak commit hour</p><p className="car-page__stat__value">{stats.peakCommitHour}:00</p></div>
-          </div>
+            <div className="car-page__signals">
+              <div className="car-page__signals-header">
+                <p className="car-page__panel-label">Public build signals</p>
+                <span>{traits.rarity} record</span>
+              </div>
+              <div className="car-page__stats">
+                <div><p className="car-page__stat__label">Commits / 365d</p><p className="car-page__stat__value">{stats.commits365d.toLocaleString()}</p></div>
+                <div><p className="car-page__stat__label">Public repos</p><p className="car-page__stat__value">{stats.publicRepos}</p></div>
+                <div><p className="car-page__stat__label">Longest streak</p><p className="car-page__stat__value">{stats.longestStreak}d</p></div>
+                <div><p className="car-page__stat__label">Total stars</p><p className="car-page__stat__value">{stats.totalStars.toLocaleString()}</p></div>
+                <div><p className="car-page__stat__label">Top language</p><p className="car-page__stat__value">{stats.topLanguage}</p></div>
+                <div><p className="car-page__stat__label">Peak commit hour</p><p className="car-page__stat__value">{stats.peakCommitHour}:00</p></div>
+              </div>
+            </div>
+          </section>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap', marginTop: 27 }}>
+          <div className="car-page__actions">
             <MintButton username={car.githubUsername} traits={traits} alreadyMinted={!!car.mintedAt} tokenId={car.tokenId} contractAddress={contract} />
             <a href={`/api/og/${encodeURIComponent(car.githubUsername)}`} download={`admon-${car.githubUsername}.png`} className="btn-ghost">
               Download share card
@@ -118,7 +128,7 @@ export default async function ProofPage({
           </div>
 
           {car.mintTxHash && (
-            <p style={{ marginTop: 18, color: 'var(--ink-tertiary)', fontFamily: 'var(--font-accent)', fontSize: 10 }}>
+            <p className="car-page__transaction">
               Monad transaction:{' '}
               <a href={`${MONAD_EXPLORER_URL}/tx/${car.mintTxHash}`} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>
                 {car.mintTxHash.slice(0, 10)}…{car.mintTxHash.slice(-6)}

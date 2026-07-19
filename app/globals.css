@@ -494,14 +494,28 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hall__card__commits { color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 9px; letter-spacing: .06em; }
 .hall__empty { padding: 80px 20px; border: 1px solid var(--void-05); color: var(--ink-tertiary); text-align: center; }
 
-.car-page { width: min(980px, calc(100% - 48px)); margin: 0 auto; padding: calc(var(--nav-height) + 64px) 0 90px; }
-.car-page__card { padding: clamp(19px, 4vw, 36px); border: 1px solid var(--void-05); background: color-mix(in srgb, var(--void-02) 94%, transparent); }
-.car-page__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 27px; border: 1px solid var(--void-05); }
-.car-page__stats > div { padding: 16px; border-right: 1px solid var(--void-05); border-bottom: 1px solid var(--void-05); }
-.car-page__stats > div:nth-child(3n) { border-right: 0; }
-.car-page__stats > div:nth-last-child(-n+3) { border-bottom: 0; }
-.car-page__stat__label { color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
-.car-page__stat__value { margin-top: 4px; color: var(--ink-primary); font-family: var(--font-display); font-size: 23px; font-weight: 700; letter-spacing: -.02em; }
+.car-page { width: min(1100px, calc(100% - 48px)); margin: 0 auto; padding: calc(var(--nav-height) + 34px) 0 90px; }
+.car-page__card { padding: clamp(18px, 2.4vw, 24px); border: 1px solid var(--void-05); background: color-mix(in srgb, var(--void-02) 94%, transparent); }
+.car-page__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+.car-page__title { margin-top: 6px; color: var(--ink-primary); font-family: var(--font-display); font-size: clamp(35px, 5vw, 54px); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
+.car-page__name { margin-top: 7px; color: var(--ink-secondary); font-size: 14px; }
+.car-page__rarity { padding: 8px 11px; font-family: var(--font-accent); font-size: 8px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.car-page__showcase { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(355px, .88fr); border: 1px solid var(--void-05); }
+.car-page__vehicle { display: grid; min-width: 0; grid-template-rows: auto 1fr; padding: 13px 13px 0; background: #163a4a; }
+.car-page__vehicle img { display: block; width: min(100%, 500px); height: auto; max-height: 272px; margin-inline: auto; align-self: end; object-fit: contain; object-position: center bottom; }
+.car-page__panel-label { color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.car-page__vehicle .car-page__panel-label { margin-bottom: 10px; color: rgba(255, 255, 255, .62); }
+.car-page__signals { display: grid; grid-template-rows: auto 1fr; min-width: 0; border-left: 1px solid var(--void-05); }
+.car-page__signals-header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 15px 16px; border-bottom: 1px solid var(--void-05); }
+.car-page__signals-header span { color: var(--accent); font-family: var(--font-accent); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; }
+.car-page__stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: stretch; }
+.car-page__stats > div { display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: 14px 16px; border-right: 1px solid var(--void-05); border-bottom: 1px solid var(--void-05); }
+.car-page__stats > div:nth-child(2n) { border-right: 0; }
+.car-page__stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+.car-page__stat__label { color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 8px; letter-spacing: .1em; line-height: 1.35; text-transform: uppercase; }
+.car-page__stat__value { overflow: hidden; margin-top: 5px; color: var(--ink-primary); font-family: var(--font-display); font-size: clamp(18px, 2vw, 24px); font-weight: 700; letter-spacing: -.02em; text-overflow: ellipsis; white-space: nowrap; }
+.car-page__actions { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--void-05); }
+.car-page__transaction { margin-top: 3px; color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 10px; }
 .mint-action { display: grid; justify-items: start; gap: 7px; }
 .mint-state { max-width: 420px; color: var(--ink-tertiary); font-family: var(--font-accent); font-size: 10px; line-height: 1.55; }
 .mint-state--error { color: #ff879f; }
@@ -522,6 +536,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .proof-grid, .live-stats__inner { grid-template-columns: 1fr; }
   .proof-card, .live-stats__stat { border-right: 0; border-bottom: 1px solid var(--void-05); }
   .proof-card:last-child, .live-stats__stat:last-child { border-bottom: 0; }
+  .car-page__showcase { grid-template-columns: 1fr; }
+  .car-page__signals { border-top: 1px solid var(--void-05); border-left: 0; }
 }
 @media (max-width: 560px) {
   :root { --edge-gutter: 16px; }
@@ -552,11 +568,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .hall__card { padding: 12px; }
   .footer-minimal { align-items: flex-start; flex-direction: column; }
   .footer-minimal__links { flex-wrap: wrap; }
-  .car-page__stats { grid-template-columns: repeat(2, 1fr); }
-  .car-page__stats > div:nth-child(3n) { border-right: 1px solid var(--void-05); }
-  .car-page__stats > div:nth-child(2n) { border-right: 0; }
-  .car-page__stats > div:nth-last-child(-n+3) { border-bottom: 1px solid var(--void-05); }
-  .car-page__stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .car-page { padding-top: calc(var(--nav-height) + 34px); }
+  .car-page__header { gap: 14px; margin-bottom: 16px; }
+  .car-page__title { font-size: clamp(36px, 12vw, 50px); }
+  .car-page__rarity { padding: 7px 9px; }
+  .car-page__vehicle { padding: 10px 10px 0; }
+  .car-page__signals-header { padding: 13px 14px; }
+  .car-page__stats > div { min-height: 82px; padding: 12px 14px; }
+  .car-page__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px; margin-top: 18px; }
+  .car-page__actions .btn-ghost { width: 100%; justify-content: center; font-size: 8px; letter-spacing: .07em; }
+  .car-page__transaction { line-height: 1.6; }
 }
 @media (max-width: 480px) {
   .cta-cluster { align-items: flex-start; flex-direction: column; }
