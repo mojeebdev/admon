@@ -26,6 +26,7 @@ export function Navbar() {
         <Link href="/garage" className={pathname?.startsWith('/garage') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
           [GARAGE]
         </Link>
+        <WalletConnect />
         <button
           type="button"
           className="nav-terminal__menu"
@@ -37,7 +38,6 @@ export function Navbar() {
           <span />
           <span />
         </button>
-        <WalletConnect />
       </div>
       {menuOpen && (
         <div className="nav-terminal__mobile-menu">
