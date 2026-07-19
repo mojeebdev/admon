@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WalletConnect } from '../wallet/WalletConnect';
 
 export function Navbar() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   const path = pathname === '/' ? '~/verify' : `~${pathname}`;
   return (
     <nav className="nav-terminal">
@@ -24,8 +26,27 @@ export function Navbar() {
         <Link href="/garage" className={pathname?.startsWith('/garage') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
           [GARAGE]
         </Link>
+        <button
+          type="button"
+          className="nav-terminal__menu"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
         <WalletConnect />
       </div>
+      {menuOpen && (
+        <div className="nav-terminal__mobile-menu">
+          <Link href="/garage" onClick={() => setMenuOpen(false)}>Garage</Link>
+          <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
+          <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
+          <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      )}
     </nav>
   );
 }

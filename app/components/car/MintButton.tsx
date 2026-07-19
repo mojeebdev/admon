@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
-  useAccount,
   useConnect,
+  useConnectors,
+  useConnection,
   useSwitchChain,
   useWaitForTransactionReceipt,
   useWriteContract,
@@ -49,10 +50,12 @@ export function MintButton({ username, traits, alreadyMinted, tokenId, contractA
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const finalizedHash = useRef<string | null>(null);
 
-  const { address, chainId, isConnected } = useAccount();
-  const { connect, connectors, isPending: connecting } = useConnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
-  const { writeContract, data: txHash, isPending: signing, error: writeError, reset } = useWriteContract();
+  const { address, chainId, status } = useConnection();
+  const { mutate: connect, isPending: connecting } = useConnect();
+  const connectors = useConnectors();
+  const { mutate: switchChain, isPending: switching } = useSwitchChain();
+  const { mutate: writeContract, data: txHash, isPending: signing, error: writeError, reset } = useWriteContract();
+  const isConnected = status === 'connected';
   const { isLoading: waiting, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
     chainId: MONAD_CHAIN.id,

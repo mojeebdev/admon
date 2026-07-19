@@ -1,13 +1,15 @@
 'use client';
 
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useConnect, useConnectors, useConnection, useDisconnect } from 'wagmi';
 import { MONAD_CHAIN } from '@/app/lib/monad';
 
 export function WalletConnect() {
-  const { address, chainId, isConnected } = useAccount();
-  const { connect, connectors, isPending } = useConnect();
-  const { disconnect } = useDisconnect();
+  const { address, chainId, status } = useConnection();
+  const { mutate: connect, isPending } = useConnect();
+  const connectors = useConnectors();
+  const { mutate: disconnect } = useDisconnect();
   const connector = connectors[0];
+  const isConnected = status === 'connected';
 
   if (!isConnected) {
     return (

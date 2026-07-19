@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { prisma } from '@/app/lib/prisma';
 import { Navbar } from '@/app/components/nav/Navbar';
 import { renderCarSVG } from '@/app/lib/carRenderer';
@@ -6,6 +7,11 @@ import { RARITY_LABELS, type CarTraits, type RarityTier } from '@/app/lib/traits
 import { getTotalMinted } from '@/app/lib/contract';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: 'Garage | Admon',
+  description: 'A public Garage of GitHub-verified build records minted on Monad.',
+};
 
 const TIERS: Array<RarityTier | 'all'> = ['all', 'mythic', 'legendary', 'epic', 'rare', 'common'];
 
@@ -55,7 +61,7 @@ export default async function GaragePage({
           </div>
         ) : (
           <div className="hall__grid">
-            {cars.map((car: (typeof cars)[number], index) => {
+            {cars.map((car: (typeof cars)[number], index: number) => {
               const traits = car.traits as unknown as CarTraits;
               const rarity = RARITY_LABELS[traits.rarity];
               const svg = renderCarSVG(traits, {

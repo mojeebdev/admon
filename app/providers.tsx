@@ -1,7 +1,7 @@
 'use client';
 
 import { createConfig, http, WagmiProvider } from 'wagmi';
-import { injected } from '@wagmi/core';
+import { injected } from 'wagmi/connectors/injected';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MONAD_CHAIN } from './lib/monad';

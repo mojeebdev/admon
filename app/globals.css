@@ -114,6 +114,43 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transition: color .2s ease;
 }
 .nav-terminal__hall:hover, .nav-terminal__hall.active, .nav-terminal__cta:hover { color: var(--accent); }
+.nav-terminal__menu {
+  display: none;
+  width: 28px;
+  height: 28px;
+  padding: 6px 4px;
+  background: none;
+  cursor: pointer;
+}
+.nav-terminal__menu span {
+  display: block;
+  width: 20px;
+  height: 1px;
+  margin: 3px 0;
+  background: var(--ink-primary);
+  transition: background .2s ease;
+}
+.nav-terminal__menu:hover span { background: var(--accent); }
+.nav-terminal__mobile-menu {
+  position: absolute;
+  top: var(--nav-height);
+  right: var(--edge-gutter);
+  display: grid;
+  min-width: 180px;
+  padding: 8px;
+  border: 1px solid var(--void-05);
+  background: var(--void-02);
+  box-shadow: 0 14px 28px rgba(17, 44, 59, .12);
+}
+.nav-terminal__mobile-menu a {
+  padding: 10px 12px;
+  color: var(--ink-secondary);
+  font-family: var(--font-accent);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.nav-terminal__mobile-menu a:hover { color: var(--accent); background: var(--void-03); }
 .nav-terminal__wallet { color: var(--accent); }
 .nav-terminal__cta:disabled { cursor: wait; opacity: .6; }
 
@@ -489,6 +526,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 560px) {
   :root { --edge-gutter: 16px; }
   .nav-terminal__status, .nav-terminal__hall { display: none; }
+  .nav-terminal__menu { display: block; }
   .hero-split, .verify-shell, .proof-section, .live-stats, .hall, .car-page { width: min(100% - 32px, var(--content-max)); }
   .hero-split { min-height: auto; padding-bottom: 40px; }
   .hero-split__title { font-size: clamp(45px, 13vw, 61px); line-height: .93; }
