@@ -16,7 +16,7 @@ export default function TermsPage() {
         <p className="legal-page__lede">Admon creates an onchain record from public GitHub activity. By using it, you confirm that you are verifying your own GitHub account and understand the public nature of blockchain records.</p>
         <section>
           <h2>Eligibility and acceptable use</h2>
-          <p>You may only verify the GitHub account you control. Do not attempt to bypass identity checks, misrepresent public activity, or use Admon to impersonate another builder.</p>
+          <p>Anyone may inspect a public GitHub username, but only the person who completes GitHub OAuth for that exact account may create and mint its build record. Do not attempt to bypass identity checks, misrepresent public activity, or use Admon to impersonate another builder.</p>
         </section>
         <section>
           <h2>Minting</h2>

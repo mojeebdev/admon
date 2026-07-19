@@ -1,6 +1,6 @@
 # Admon
 
-Admon turns a builder's public GitHub activity into a wallet-bound, onchain build record on Monad Mainnet. GitHub OAuth confirms the builder controls the profile before a record can be minted, protecting public work from impersonation.
+Admon turns a builder's public GitHub activity into a wallet-bound, onchain build record on Monad Mainnet. Anyone can inspect a public GitHub username, but GitHub OAuth confirms the builder controls the profile before a record can be created or minted, protecting public work from impersonation.
 
 - Live app: [admon.peerfix.dev](https://admon.peerfix.dev)
 - Garage: [admon.peerfix.dev/garage](https://admon.peerfix.dev/garage)
@@ -10,14 +10,15 @@ Admon turns a builder's public GitHub activity into a wallet-bound, onchain buil
 
 ## What Admon does
 
-1. A builder signs in with GitHub using the read-only `read:user` scope.
-2. Admon confirms the requested username matches that authenticated GitHub account.
-3. It reads public GitHub signals only: authored commits, commits in the last 365 days, public repositories, stars, longest visible commit streak, account age, top language, and peak commit hour.
-4. Those signals create a transparent Build Score, rarity tier, and vehicle traits.
-5. The builder connects an injected wallet and mints one ERC-721 record for that GitHub username on Monad Mainnet.
-6. The mint receipt, metadata, share card, Monadscan link, and OpenSea asset link are available from the build record.
+1. Anyone can check a public GitHub username and inspect its public build preview without signing in.
+2. Admon reads public GitHub signals only: authored commits, commits in the last 365 days, public repositories, stars, longest visible commit streak, account age, top language, and peak commit hour.
+3. The public preview computes a transparent Build Score, rarity tier, and vehicle traits. It does not create a database record or mint authorization.
+4. A builder signs in with GitHub using the read-only `read:user` scope.
+5. Admon confirms the requested username exactly matches that authenticated GitHub account, then creates or refreshes the mintable build record.
+6. The builder connects an injected wallet and mints one ERC-721 record for that GitHub username on Monad Mainnet.
+7. The mint receipt, metadata, share card, Monadscan link, and OpenSea asset link are available from the build record.
 
-Admon does not request private repository access, GitHub write permissions, private source code, or a wallet private key. See the in-app [privacy policy](https://admon.peerfix.dev/privacy) and [terms](https://admon.peerfix.dev/terms).
+Admon does not request private repository access, GitHub write permissions, private source code, or a wallet private key. It uses only two strictly necessary HTTP-only cookies for GitHub OAuth state and the signed-in GitHub session, not advertising or tracking cookies. See the in-app [privacy policy](https://admon.peerfix.dev/privacy) and [terms](https://admon.peerfix.dev/terms).
 
 ## Current stack
 
@@ -120,6 +121,7 @@ The authorizer is necessary because GitHub OAuth happens offchain. It lets the s
 ## Routes and public records
 
 - `/` - verification landing page, live mint activity, and wallet connection.
+- `/api/check` - public GitHub username preview. It does not write a build record or issue a mint authorization.
 - `/garage` - public ranking of build records by Build Score, then total commits.
 - `/garage/[username]` - public proof page with traits, score, onchain mint data, and OpenSea link.
 - `/privacy` and `/terms` - data and builder-protection boundaries.

@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/app/components/nav/Navbar';
 import { renderCarSVG } from '@/app/lib/carRenderer';
 import { RARITY_LABELS, type CarTraits, type StatsSnapshot } from '@/app/lib/traits';
-import { openSeaAssetUrl } from '@/app/lib/monad';
 
 interface GitHubIdentity {
   authenticated: boolean;
@@ -19,6 +18,15 @@ interface BuildResult {
   traits: CarTraits;
   stats: StatsSnapshot;
   permalink: string;
+}
+
+interface PublicCheckResult {
+  username: string;
+  name: string | null;
+  avatarUrl: string;
+  traits: CarTraits;
+  stats: StatsSnapshot;
+  rarityScore: number;
 }
 
 interface LiveStats {
@@ -58,8 +66,12 @@ export default function HomePage() {
   const [identity, setIdentity] = useState<GitHubIdentity | null>(null);
   const [stats, setStats] = useState<LiveStats | null>(null);
   const [building, setBuilding] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<BuildResult | null>(null);
+  const [checkUsername, setCheckUsername] = useState('');
+  const [checkResult, setCheckResult] = useState<PublicCheckResult | null>(null);
+  const [checkError, setCheckError] = useState<string | null>(null);
 
   const demoCar = useMemo(
     () => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(renderCarSVG(DEMO_TRAITS, {
@@ -71,6 +83,17 @@ export default function HomePage() {
     })),
     [],
   );
+
+  const checkedCar = useMemo(() => {
+    if (!checkResult) return null;
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(renderCarSVG(checkResult.traits, {
+      username: checkResult.username,
+      width: 960,
+      height: 540,
+      showRarityBadge: true,
+      background: 'transparent',
+    }));
+  }, [checkResult]);
 
   useEffect(() => {
     let active = true;
@@ -126,6 +149,30 @@ export default function HomePage() {
     setResult(null);
   }
 
+  async function checkPublicProfile(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const username = checkUsername.trim().replace(/^@/, '');
+    if (!username || checking) return;
+
+    setChecking(true);
+    setCheckError(null);
+    setCheckResult(null);
+    try {
+      const response = await fetch('/api/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || 'Could not check this public GitHub profile.');
+      setCheckResult(payload);
+    } catch (checkError) {
+      setCheckError(checkError instanceof Error ? checkError.message : 'Could not check this public GitHub profile.');
+    } finally {
+      setChecking(false);
+    }
+  }
+
   const noPublicCommits = result?.stats.commits365d === 0;
   const primaryHref = identity?.authenticated ? '#verify' : '/api/github/login?returnTo=/';
 
@@ -155,11 +202,7 @@ export default function HomePage() {
               <a className="btn-primary" href={primaryHref}>
                 {identity?.authenticated ? 'Verify my build history ↓' : 'Connect GitHub to verify →'}
               </a>
-              {stats?.lastMint?.tokenId != null && stats.contract && (
-                <a className="btn-ghost" href={openSeaAssetUrl(stats.contract, stats.lastMint.tokenId)} target="_blank" rel="noreferrer">
-                  Check latest NFT on OpenSea
-                </a>
-              )}
+              <a className="btn-ghost" href="#check">Check a GitHub username</a>
               </div>
               <span className="hero-note">GitHub OAuth · Public data only</span>
             </div>
@@ -226,6 +269,56 @@ export default function HomePage() {
               </div>
               <Link href={result.permalink} className="btn-primary">Inspect your proof →</Link>
             </div>
+          )}
+
+          <div id="check" className="verify-panel verify-panel--check" style={{ borderTop: 0 }}>
+            <div className="verify-panel__copy">
+              <span className="verify-panel__eyebrow">Public preview</span>
+              <p className="verify-panel__title">Check any public GitHub username. Only that GitHub account can mint its record.</p>
+              <p className="verify-panel__hint">No sign-in is needed to inspect public signals. A preview does not create a record or a mint authorization.</p>
+              {checkError && <p className="verify-panel__error" role="alert">{checkError}</p>}
+            </div>
+            <form className="username-check" onSubmit={checkPublicProfile}>
+              <label className="sr-only" htmlFor="github-username">GitHub username</label>
+              <span aria-hidden="true">@</span>
+              <input
+                id="github-username"
+                value={checkUsername}
+                onChange={(event) => setCheckUsername(event.target.value)}
+                placeholder="github-username"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
+                maxLength={39}
+              />
+              <button className="btn-ghost" type="submit" disabled={checking}>{checking ? 'Checking...' : 'Check profile'}</button>
+            </form>
+          </div>
+
+          {checkResult && checkedCar && (
+            <section className="public-preview" aria-label={`Public build preview for ${checkResult.username}`}>
+              <div className="public-preview__header">
+                <div>
+                  <span className="verify-panel__eyebrow">Public build preview</span>
+                  <p className="verify-panel__title">@{checkResult.username}{checkResult.name ? ` · ${checkResult.name}` : ''}</p>
+                </div>
+                <span className="public-preview__score">Build score {checkResult.rarityScore.toLocaleString()}</span>
+              </div>
+              <div className="public-preview__body">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={checkedCar} alt={`Generated Admon vehicle preview for ${checkResult.username}`} />
+                <div className="public-preview__stats">
+                  <span><strong>{checkResult.stats.commits365d.toLocaleString()}</strong> commits / 365d</span>
+                  <span><strong>{checkResult.stats.publicRepos}</strong> public repos</span>
+                  <span><strong>{checkResult.stats.longestStreak}d</strong> longest streak</span>
+                  <span><strong>{checkResult.traits.rarity}</strong> rarity</span>
+                </div>
+              </div>
+              <div className="public-preview__footer">
+                <p>This is a public preview only. To mint it, connect the GitHub account <strong>@{checkResult.username}</strong> and your wallet.</p>
+                <a className="btn-primary" href={`/api/github/login?returnTo=/?check=${encodeURIComponent(checkResult.username)}`}>Connect GitHub to mint →</a>
+              </div>
+            </section>
           )}
         </section>
 
