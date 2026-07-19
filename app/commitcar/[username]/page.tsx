@@ -114,7 +114,7 @@ export default async function ProofPage({
             </a>
             <a href={shareUrl} target="_blank" rel="noreferrer" className="btn-ghost">Share on X</a>
             {openSeaUrl && <a href={openSeaUrl} target="_blank" rel="noreferrer" className="btn-ghost">View on OpenSea</a>}
-            <Link href="/garage" className="btn-ghost">Browse garage</Link>
+            <Link href="/garage" className="btn-ghost">Back to Garage</Link>
           </div>
 
           {car.mintTxHash && (
