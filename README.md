@@ -5,7 +5,8 @@ Admon turns a builder's public GitHub activity into a wallet-bound, onchain buil
 - Live app: [admon.peerfix.dev](https://admon.peerfix.dev)
 - Garage: [admon.peerfix.dev/garage](https://admon.peerfix.dev/garage)
 - OpenSea collection: [Admon](https://opensea.io/collection/admon)
-- Verified Monad contract: [`0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63)
+- Verified Monad V1 (Genesis): [`0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63)
+- Monad V2 (Trace): [`0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0`](https://monadscan.com/address/0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0)
 - License: [MIT](./LICENSE)
 
 ## What Admon does
@@ -99,6 +100,7 @@ Deploy `mojeebdev/admon` to Vercel, where Vercel Analytics is already integrated
 ```text
 NEXT_PUBLIC_APP_URL=https://admon.peerfix.dev
 NEXT_ADMON_CONTRACT_ADDRESS=0xb6aedBF17a11928A63773F88a9CfD3E252F43a63
+NEXT_ADMON_TRACE_CONTRACT_ADDRESS=0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0
 ```
 
 Register this production callback URL in the GitHub OAuth App:
@@ -111,15 +113,18 @@ Create a public Supabase Storage bucket named `cars`. The application uploads ge
 
 ## Contract and mint security
 
-The verified [Admon contract](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63) is an MIT-licensed ERC-721 deployed on Monad Mainnet, chain ID `143`. The Solidity source is [contracts/Admon.sol](./contracts/Admon.sol).
+**V1 Genesis** — verified [Admon](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63) (`0xb6aedBF1…3a63`) is an MIT-licensed ERC-721 on Monad Mainnet, chain ID `143`. Source: [contracts/Admon.sol](./contracts/Admon.sol).
 
-- Contract name: `Admon`
-- Token symbol: `ADMON`
+- Contract name: `Admon` · symbol: `ADMON`
 - Compiler: Solidity `0.8.24`
-- Constructor arguments: `initialBaseURI` and `initialAuthorizedSigner`
-- One token can be minted for each GitHub username.
-- A mint requires a server-issued EIP-712 signature binding the recipient wallet, username, canonical trait hash, token URI, and a ten-minute deadline.
-- The contract owner can update the base URI and authorizer. The deployed owner is the wallet that deployed the contract in Remix.
+- One token per GitHub username
+- EIP-712 mint binds recipient, username, trait hash, token URI, and a ten-minute deadline
+
+**V2 Trace** — [AdmonTrace](https://monadscan.com/address/0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0) (`0xCc3fc8b2…173b0`). Source: [contracts/AdmonTrace.sol](./contracts/AdmonTrace.sol).
+
+- Contract name: `Admon Trace` · symbol: `TRACE`
+- One token per GitHub username + Friday `weekKey`
+- Metadata via owner-updatable base URI (ERC-4906)
 
 The authorizer is necessary because GitHub OAuth happens offchain. It lets the server attest that the authenticated GitHub account and the recipient wallet were verified together, without ever needing the builder's wallet private key.
 
@@ -147,7 +152,7 @@ Admon V1 remains the **Genesis collection**. Verified V1 records can be marked o
 Before deploying Admon Trace, add this server-only variable in Vercel and locally:
 
 ```text
-NEXT_ADMON_TRACE_CONTRACT_ADDRESS=<deployed AdmonTrace address>
+NEXT_ADMON_TRACE_CONTRACT_ADDRESS=0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0
 ```
 
 The Solidity source is [contracts/AdmonTrace.sol](./contracts/AdmonTrace.sol). Deploy it in Remix with:
@@ -198,7 +203,8 @@ Admon is a Monad Mainnet submission. Submit:
 - **Project URL:** https://admon.peerfix.dev
 - **GitHub repository:** https://github.com/mojeebdev/admon
 - **Category:** Monad Mainnet
-- **Contract:** `0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`
+- **Contract V1 (Genesis):** `0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`
+- **Contract V2 (Trace):** `0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0`
 - **Demo video:** Public URL, three minutes or less.
 - **Social post URL:** Required only for the Most Viral Solution prize.
 

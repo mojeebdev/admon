@@ -35,6 +35,10 @@ interface LiveStats {
   onChainMinted: number;
   contract?: string;
   explorer?: string | null;
+  contractV1?: string;
+  explorerV1?: string | null;
+  contractV2?: string;
+  explorerV2?: string | null;
   lastMint?: {
     username: string;
     tokenId: number | null;
@@ -389,6 +393,10 @@ function LiveStats({ stats }: { stats: LiveStats | null }) {
   if (!stats) {
     return <section className="live-stats"><p className="live-stats__empty">Loading public verification totals…</p></section>;
   }
+
+  const explorerV1 = stats.explorerV1 || stats.explorer || null;
+  const explorerV2 = stats.explorerV2 || null;
+
   return (
     <section className="live-stats" aria-label="Admon protocol totals">
       <div className="live-stats__inner">
@@ -400,15 +408,26 @@ function LiveStats({ stats }: { stats: LiveStats | null }) {
           <span className="live-stats__n">{stats.onChainMinted.toLocaleString()}</span>
           <span className="live-stats__l">Minted on Monad</span>
         </Link>
-        {stats.explorer ? (
-          <a href={stats.explorer} target="_blank" rel="noreferrer" className="live-stats__stat">
-            <span className="live-stats__n live-stats__n--sm">View contract ↗</span>
-            <span className="live-stats__l">Monad Mainnet</span>
+        {explorerV1 ? (
+          <a href={explorerV1} target="_blank" rel="noreferrer" className="live-stats__stat">
+            <span className="live-stats__n live-stats__n--sm">Contract V1 ↗</span>
+            <span className="live-stats__l">Genesis · Monad Mainnet</span>
           </a>
         ) : (
           <span className="live-stats__stat">
-            <span className="live-stats__n live-stats__n--sm">Deploying</span>
-            <span className="live-stats__l">Monad Mainnet contract</span>
+            <span className="live-stats__n live-stats__n--sm">V1 deploying</span>
+            <span className="live-stats__l">Genesis contract</span>
+          </span>
+        )}
+        {explorerV2 ? (
+          <a href={explorerV2} target="_blank" rel="noreferrer" className="live-stats__stat">
+            <span className="live-stats__n live-stats__n--sm">Contract V2 ↗</span>
+            <span className="live-stats__l">Trace · Monad Mainnet</span>
+          </a>
+        ) : (
+          <span className="live-stats__stat">
+            <span className="live-stats__n live-stats__n--sm">V2 deploying</span>
+            <span className="live-stats__l">Trace contract</span>
           </span>
         )}
       </div>
@@ -431,6 +450,8 @@ function Footer() {
       <div className="footer-minimal__links">
         <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a>
+        <a href="https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63" target="_blank" rel="noreferrer">Contract V1</a>
+        <a href="https://monadscan.com/address/0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0" target="_blank" rel="noreferrer">Contract V2</a>
         <Link href="/garage">Garage</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/terms">Terms</Link>

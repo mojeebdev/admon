@@ -162,7 +162,7 @@ export default async function ProofPage({
           </svg>
           <span className="footer-minimal__mark">Admon.</span>
         </span>
-        <div className="footer-minimal__links"><Link href="/">Verify a build history</Link><a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a><a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
+        <div className="footer-minimal__links"><Link href="/">Verify a build history</Link><a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a><a href="https://docs.monad.xyz" target="_blank" rel="noreferrer">Monad docs</a><a href="https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63" target="_blank" rel="noreferrer">Contract V1</a><a href="https://monadscan.com/address/0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0" target="_blank" rel="noreferrer">Contract V2</a><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
         <span className="footer-minimal__copy">Built on Monad Mainnet</span>
       </footer>
     </div>

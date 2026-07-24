@@ -186,8 +186,9 @@ Indexes cover rarity/creation, mint timestamp, rarity score, total commits, Gene
 - **Default RPC:** `https://rpc.monad.xyz`, configurable with `NEXT_PUBLIC_MONAD_RPC_URL`.
 - **Explorer:** [Monadscan](https://monadscan.com).
 - **Collection:** [OpenSea Admon](https://opensea.io/collection/admon).
-- **Deployed V1 contract:** [`0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63).
-- **Sources:** `contracts/Admon.sol` (V1), `contracts/AdmonTrace.sol` (weekly).
+- **Deployed V1 (Genesis):** [`0xb6aedBF17a11928A63773F88a9CfD3E252F43a63`](https://monadscan.com/address/0xb6aedBF17a11928A63773F88a9CfD3E252F43a63).
+- **Deployed V2 (Trace):** [`0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0`](https://monadscan.com/address/0xCc3fc8b272bca9de775ba7399E3dD7fd7a0173b0).
+- **Sources:** `contracts/Admon.sol` (V1), `contracts/AdmonTrace.sol` (weekly / V2).
 - **Compiler:** Solidity 0.8.24.
 - **License:** MIT.
 
