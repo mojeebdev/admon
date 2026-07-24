@@ -316,7 +316,10 @@ export default function HomePage() {
               </div>
               <div className="public-preview__footer">
                 <p>This is a public preview only. To mint it, connect the GitHub account <strong>@{checkResult.username}</strong> and your wallet.</p>
-                <a className="btn-primary" href={`/api/github/login?returnTo=/?check=${encodeURIComponent(checkResult.username)}`}>Connect GitHub to mint →</a>
+                <div className="public-preview__actions">
+                  <Link className="btn-ghost" href={`/preview/${encodeURIComponent(checkResult.username)}`}>Open preview page</Link>
+                  <a className="btn-primary" href={`/api/github/login?returnTo=/?check=${encodeURIComponent(checkResult.username)}`}>Connect GitHub to mint →</a>
+                </div>
               </div>
             </section>
           )}

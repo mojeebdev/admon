@@ -31,6 +31,10 @@ export default function PrivacyPage() {
           <p>Admon uses two strictly necessary, HTTP-only cookies only during GitHub OAuth: <code>admon_github_oauth_state</code> protects the sign-in flow for up to 10 minutes, and <code>admon_github_session</code> keeps your signed-in GitHub identity for up to 7 days. They are not used for advertising, cross-site tracking, or profiling. You can clear the session by disconnecting GitHub or clearing browser cookies.</p>
         </section>
         <section>
+          <h2>Builder connections</h2>
+          <p>If you send or receive a builder connection request, Admon stores the two builder profiles, request status, and response time. Connection requests are private to the people involved. Admon does not provide public messaging or use connection data for advertising.</p>
+        </section>
+        <section>
           <h2>Public records</h2>
           <p>Once minted, the build record, its traits, wallet address, transaction, and NFT metadata are public by design. The Garage and Monad are public systems, so do not mint information you do not want to be publicly associated with your wallet.</p>
         </section>

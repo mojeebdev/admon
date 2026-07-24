@@ -91,13 +91,19 @@ export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
   return repos;
 }
 
-// Use the commits search API to count user's authored commits in the last 365 days
-export async function fetchCommitCount365d(username: string): Promise<number> {
-  const since = new Date();
-  since.setDate(since.getDate() - 365);
-  const sinceISO = since.toISOString().split('T')[0];
-
-  const q = encodeURIComponent(`author:${username} committer-date:>${sinceISO}`);
+/**
+ * Count public commits authored by the user via GitHub's Commit Search API.
+ *
+ * The Search API is NOT limited to 365 days. Pass `sinceISODate` (YYYY-MM-DD)
+ * to bound the window — typically the account's `created_at` for all-time.
+ * Omit it only if you intentionally want an unbounded search.
+ *
+ * Note: Search indexes public authored commits GitHub can attribute; private
+ * work and some edge cases are excluded. `total_count` is capped in our app.
+ */
+async function fetchCommitCount(username: string, sinceISODate?: string): Promise<number> {
+  const dateFilter = sinceISODate ? ` committer-date:>=${sinceISODate}` : '';
+  const q = encodeURIComponent(`author:${username}${dateFilter}`);
   const res = await fetch(`${GITHUB_API}/search/commits?q=${q}&per_page=1`, {
     headers: {
       ...githubHeaders(),
@@ -110,11 +116,25 @@ export async function fetchCommitCount365d(username: string): Promise<number> {
     return 0;
   }
   const data: CommitDateSearchResponse = await res.json();
-  return Math.min(data.total_count, 10000); // cap to prevent absurd numbers
+  return Math.min(data.total_count, 10000);
 }
 
-// Sample recent commits to detect time-of-day pattern + streak
-export async function fetchRecentCommitActivity(username: string): Promise<{ timestamps: string[]; totalCommits: number }> {
+// All-time public authored commits from account creation to now.
+export async function fetchCommitCountAllTime(username: string, accountCreatedAt: string): Promise<number> {
+  const sinceISO = accountCreatedAt.split('T')[0];
+  return fetchCommitCount(username, sinceISO);
+}
+
+// Public authored commits in the last 365 days (recent activity signal).
+export async function fetchCommitCount365d(username: string): Promise<number> {
+  const since = new Date();
+  since.setDate(since.getDate() - 365);
+  const sinceISO = since.toISOString().split('T')[0];
+  return fetchCommitCount(username, sinceISO);
+}
+
+// Sample recent commits to detect time-of-day pattern + streak (not the all-time total).
+export async function fetchRecentCommitActivity(username: string): Promise<{ timestamps: string[] }> {
   const q = encodeURIComponent(`author:${username}`);
   const res = await fetch(`${GITHUB_API}/search/commits?q=${q}&sort=author-date&order=desc&per_page=100`, {
     headers: {
@@ -125,12 +145,11 @@ export async function fetchRecentCommitActivity(username: string): Promise<{ tim
   });
   if (!res.ok) {
     if (res.status === 403 || res.status === 429) await githubError(res, 'GitHub commit history lookup failed');
-    return { timestamps: [], totalCommits: 0 };
+    return { timestamps: [] };
   }
   const data: CommitDateSearchResponse = await res.json();
   return {
     timestamps: data.items.map((i) => i.commit.author.date),
-    totalCommits: Math.min(data.total_count, 10000),
   };
 }
 
@@ -183,8 +202,10 @@ export async function buildStatsSnapshot(username: string): Promise<{
   stats: StatsSnapshot;
 }> {
   const user = await fetchUser(username);
-  const [repos, commits365d, recentActivity] = await Promise.all([
+  const [repos, totalCommits, commits365d, recentActivity] = await Promise.all([
     fetchRepos(username),
+    // Bound to account creation so the total reflects the full public history.
+    fetchCommitCountAllTime(username, user.created_at),
     fetchCommitCount365d(username),
     fetchRecentCommitActivity(username),
   ]);
@@ -194,7 +215,7 @@ export async function buildStatsSnapshot(username: string): Promise<{
     (Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24 * 365);
 
   const stats: StatsSnapshot = {
-    totalCommits: recentActivity.totalCommits,
+    totalCommits,
     commits365d,
     publicRepos: repos.filter((r) => !r.fork).length,
     longestStreak: computeLongestStreak(recentActivity.timestamps),

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Admon Trace Meridian vehicle concept</title>
+  <desc id="desc">An original architectural vehicle concept for Admon build records.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#c9d9d6" stroke-width="1"/></pattern>
+    <linearGradient id="body" x1="0" x2="1"><stop stop-color="#e85c42"/><stop offset="1" stop-color="#b82e2c"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8297a0"/><stop offset="1" stop-color="#172c37"/></linearGradient>
+    <style>.paper{fill:#fbfaf5}.ink{fill:#133441}.muted{fill:#708891}.coral{fill:#ef6548}.line{stroke:#b9cfcc;stroke-width:2}.label{font:700 15px monospace;letter-spacing:2px}.copy{font:500 18px Arial,sans-serif}.headline{font:700 46px Arial,sans-serif;letter-spacing:-1px}.tiny{font:600 12px monospace;letter-spacing:1.5px}</style>
+  </defs>
+  <rect width="1600" height="1000" fill="#edf5f3"/><rect width="1600" height="1000" fill="url(#grid)"/>
+  <rect x="92" y="82" width="1416" height="836" class="paper" stroke="#b9cfcc" stroke-width="2"/>
+  <text x="136" y="142" class="label coral">ADMON // TRACE // MERIDIAN</text>
+  <text x="136" y="204" class="headline ink">A record runner built around the trail.</text>
+  <text x="136" y="240" class="copy muted">Less sports car. More precision instrument with one clear, ownable silhouette.</text>
+  <rect x="136" y="290" width="1328" height="448" fill="#133f50"/>
+  <text x="168" y="326" class="tiny" fill="#a9c9ce">TRACE / MERIDIAN / PUBLIC BUILD SIGNALS</text>
+  <!-- ground and measurement marks -->
+  <path d="M212 653H1379" stroke="#38616d" stroke-width="2"/><path d="M260 682H1324" stroke="#315662" stroke-width="2"/>
+  <g stroke="#38616d" stroke-width="1"><path d="M280 642v20M380 642v20M480 642v20M580 642v20M680 642v20M780 642v20M880 642v20M980 642v20M1080 642v20M1180 642v20M1280 642v20"/></g>
+  <!-- MERIDIAN body: a long, squared silhouette with a stepped record spine -->
+  <path d="M247 625 L311 562 L511 530 L625 452 L829 452 L928 497 L1130 512 L1328 567 L1368 617 L1344 646 L277 653 Z" fill="url(#body)" stroke="#ff9f87" stroke-width="3"/>
+  <!-- canopy segmented like a history chart -->
+  <path d="M511 530 L625 452 L829 452 L928 497 L722 506 Z" fill="url(#glass)" stroke="#a2c4ca" stroke-width="3"/>
+  <path d="M611 469L598 518M694 455L690 510M778 455L784 504M849 467L872 502" stroke="#58737d" stroke-width="4"/>
+  <!-- stepped data spine, unique top geometry -->
+  <path d="M575 529 L610 498 L655 498 L655 483 L701 483 L701 469 L755 469 L755 452" fill="none" stroke="#f9d2c5" stroke-width="8"/>
+  <!-- audit rail -->
+  <path d="M274 614 C553 630 1000 620 1350 587" fill="none" stroke="#ffc0ad" stroke-width="8"/>
+  <path d="M282 596 L1336 571" stroke="#702220" stroke-width="5"/>
+  <!-- flat, rectangular rear commit bar -->
+  <rect x="1293" y="566" width="52" height="20" rx="2" fill="#f7eee1"/><path d="M1298 576H1341" stroke="#f26445" stroke-width="4"/>
+  <!-- wheels -->
+  <g><circle cx="452" cy="646" r="62" fill="#101b22"/><circle cx="452" cy="646" r="43" fill="#6c7c83"/><circle cx="452" cy="646" r="27" fill="#1d323b"/><circle cx="1132" cy="643" r="62" fill="#101b22"/><circle cx="1132" cy="643" r="43" fill="#6c7c83"/><circle cx="1132" cy="643" r="27" fill="#1d323b"/></g>
+  <!-- proof plate -->
+  <rect x="774" y="588" width="129" height="31" rx="3" fill="#fbfaf5" stroke="#133441" stroke-width="3"/><text x="795" y="609" class="tiny ink" style="font-size:10px">MERIDIAN/01</text>
+  <!-- annotation rail -->
+  <g><path d="M326 790H1274" class="line"/><path d="M326 790v50M634 790v50M945 790v50M1274 790v50" class="line"/>
+  <text x="326" y="872" class="label ink">STEPPED DATA SPINE</text><text x="634" y="872" class="label ink">HISTORY CANOPY</text><text x="945" y="872" class="label ink">AUDIT RAIL</text><text x="1274" y="872" class="label ink" text-anchor="end">COMMIT BAR</text></g>
+</svg>

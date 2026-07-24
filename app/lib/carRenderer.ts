@@ -78,6 +78,18 @@ const CHASSIS: Record<ChassisShape, ChassisProfile> = {
   },
 };
 
+// Trace Meridian is Admon's shared vehicle language. Traits still control
+// paint, finish, wheels, lighting, and aero, while the recognisable silhouette
+// stays consistent across every proof of build.
+const MERIDIAN: ChassisProfile = {
+  body: 'M104 374 L157 331 L326 308 L425 244 L613 244 L700 278 L792 287 L860 324 L879 359 L862 388 L116 396 Z',
+  glass: 'M326 308 L426 244 L613 244 L700 278 L510 286 Z',
+  roofline: 'M327 307 L426 243 L613 243 L700 277',
+  archRear: 'M196 390 A85 85 0 0 1 367 390',
+  archFront: 'M612 390 A85 85 0 0 1 783 390',
+  frontX: 868,
+};
+
 function identifier(username: string) {
   return 'admon-' + username.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 16);
 }
@@ -146,7 +158,7 @@ export interface RenderOptions {
 export function renderCarSVG(traits: CarTraits, options: RenderOptions): string {
   const width = options.width || 960;
   const height = options.height || 540;
-  const profile = CHASSIS[traits.chassis];
+  const profile = MERIDIAN;
   const paint = PAINT_HEX[traits.paint];
   const rarity = RARITY_LABELS[traits.rarity];
   const id = identifier(options.username);
@@ -177,15 +189,17 @@ export function renderCarSVG(traits: CarTraits, options: RenderOptions): string 
     '<path d="' + profile.body + '" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="1.5"/>' +
     '<path d="' + profile.glass + '" fill="url(#' + id + '-glass)" stroke="#dbe1ff" stroke-opacity=".48" stroke-width="2"/>' +
     '<path d="' + profile.roofline + '" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity=".42"/>' +
-    '<path d="M430 280 L418 381 M625 274 L642 388 M176 345 C331 365 661 360 816 331" fill="none" stroke="#08080d" stroke-width="3" opacity=".48"/>' +
+    '<path d="M412 255 L398 316 M492 246 L487 301 M572 246 L579 293 M640 257 L665 285" fill="none" stroke="#11242d" stroke-width="4" opacity=".62"/>' +
+    '<path d="M385 310 L423 283 L471 283 L471 268 L521 268 L521 254 L580 254 L580 244" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity=".55"/>' +
     '<path d="' + profile.archRear + '" fill="none" stroke="#16151f" stroke-width="11"/><path d="' + profile.archFront + '" fill="none" stroke="#16151f" stroke-width="11"/>' +
     '<path d="' + profile.archRear + '" fill="none" stroke="#f4f2ff" stroke-opacity=".18" stroke-width="2"/><path d="' + profile.archFront + '" fill="none" stroke="#f4f2ff" stroke-opacity=".18" stroke-width="2"/>' +
-    '<path d="M145 360 C347 382 591 383 841 351" fill="none" stroke="' + paint.accent + '" stroke-width="3" opacity=".55"/>' +
+    '<path d="M126 369 C350 390 625 388 865 350" fill="none" stroke="' + paint.accent + '" stroke-width="6" opacity=".84"/>' +
+    '<g transform="translate(548 337)"><circle r="19" fill="#f8f7f1" stroke="#102e3a" stroke-width="3"/><path d="M-8 4 C-8-8 8-11 10-1 L10 8 M-8 1 H8" fill="none" stroke="#102e3a" stroke-width="3" stroke-linecap="round"/><circle cx="10" cy="8" r="2.5" fill="#f26445"/></g>' +
     finishDetails(traits.finish, id) +
     aero(traits.aero, paint.accent) +
     headlights(traits.headlights, profile.frontX) +
-    '<path d="M814 347 L855 339 L849 370 L814 377 Z" fill="#0a0a0d" opacity=".7"/><path d="M824 353 L846 348" stroke="#f0f0f8" stroke-width="2" opacity=".35"/>' +
+    '<rect x="832" y="338" width="34" height="17" rx="2" fill="#f2f1e9"/><path d="M837 347 H862" stroke="' + paint.accent + '" stroke-width="3"/>' +
     plate + badge +
-    '<text x="112" y="482" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#b6cdc8">BUILD PROOF // ' + traits.chassis.toUpperCase() + ' // ' + traits.paint.toUpperCase() + '</text>' +
+    '<text x="112" y="482" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#b6cdc8">TRACE / MERIDIAN // ' + traits.chassis.toUpperCase() + ' // ' + traits.paint.toUpperCase() + '</text>' +
     '</svg>';
 }

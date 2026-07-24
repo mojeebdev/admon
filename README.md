@@ -11,7 +11,10 @@ Admon turns a builder's public GitHub activity into a wallet-bound, onchain buil
 ## What Admon does
 
 1. Anyone can check a public GitHub username and inspect its public build preview without signing in.
-2. Admon reads public GitHub signals only: authored commits, commits in the last 365 days, public repositories, stars, longest visible commit streak, account age, top language, and peak commit hour.
+2. Admon reads public GitHub signals only, via the Commit Search and user/repo APIs:
+   - **All-time public authored commits** from the account's `created_at` date to now (not limited to 365 days).
+   - **Commits in the last 365 days** as a recent-activity signal.
+   - Public repositories, stars, longest visible streak and peak hour from a recent commit sample, account age, and top language.
 3. The public preview computes a transparent Build Score, rarity tier, and vehicle traits. It does not create a database record or mint authorization.
 4. A builder signs in with GitHub using the read-only `read:user` scope.
 5. Admon confirms the requested username exactly matches that authenticated GitHub account, then creates or refreshes the mintable build record.
@@ -22,7 +25,7 @@ Admon does not request private repository access, GitHub write permissions, priv
 
 ## Current stack
 
-The application uses Next.js 16.2.10 with React 19, TypeScript 5.9, Prisma 5, Supabase Postgres and Storage, GitHub OAuth, Viem 2, Wagmi 3, Vercel Analytics, and a Solidity ERC-721 on Monad Mainnet.
+The application uses Next.js 16.2.10 with React 19, TypeScript 5.9, Prisma 5, Supabase Postgres and Storage, GitHub OAuth, Viem 2, Wagmi 3, Vercel Analytics, and Solidity ERC-721 contracts on Monad Mainnet (`Admon` V1 + `AdmonTrace` weekly).
 
 The detailed, source-evidenced stack reference is [stack.md](./stack.md). It is maintained from the current codebase and lockfile. StackBrief was not run automatically because it is a third-party package that could export workspace contents.
 
@@ -56,12 +59,14 @@ Set every required variable from `.env.example`:
 | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Canonical application URL and NFT metadata origin. |
 | `NEXT_PUBLIC_MONAD_RPC_URL` | Monad Mainnet RPC URL. |
-| `NEXT_ADMON_CONTRACT_ADDRESS` | Deployed Admon contract address. This is server-only despite its historical `NEXT_` prefix. |
+| `NEXT_ADMON_CONTRACT_ADDRESS` | Deployed Admon (V1) contract address. This is server-only despite its historical `NEXT_` prefix. |
+| `NEXT_ADMON_TRACE_CONTRACT_ADDRESS` | Deployed AdmonTrace contract address for the weekly collection. Server-only. |
 | `NEXT_PUBLIC_LAUNCH_POST_URL` | Optional X launch post included in builder share links. |
 | `GITHUB_OAUTH_CLIENT_ID` / `GITHUB_OAUTH_CLIENT_SECRET` | GitHub OAuth credentials. |
 | `GITHUB_SESSION_SECRET` | Random secret used to sign OAuth state and the HTTP-only GitHub session cookie. |
 | `GITHUB_PAT` | Optional GitHub token used only to raise public API limits. |
-| `MONAD_AUTHORIZER_PRIVATE_KEY` | Server-only private key that issues short-lived EIP-712 mint authorizations. Never expose it in a browser or commit it. |
+| `MONAD_AUTHORIZER_PRIVATE_KEY` | Server-only private key that issues short-lived EIP-712 mint authorizations for V1. Never expose it in a browser or commit it. |
+| `MONAD_TRACE_AUTHORIZER_PRIVATE_KEY` | Optional Trace-only EIP-712 signer. If unset, Trace reuses `MONAD_AUTHORIZER_PRIVATE_KEY`. |
 | `DATABASE_URL` / `DIRECT_URL` | Supabase Postgres connection URLs used by Prisma. |
 | `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase credentials used to persist generated public share cards. |
 
@@ -124,12 +129,63 @@ The authorizer is necessary because GitHub OAuth happens offchain. It lets the s
 - `/api/check` - public GitHub username preview. It does not write a build record or issue a mint authorization.
 - `/garage` - public ranking of build records by Build Score, then total commits.
 - `/garage/[username]` - public proof page with traits, score, onchain mint data, and OpenSea link.
+- `/builder/[username]` - public builder ledger with historical records, Genesis status, and connection controls.
+- `/preview/[username]` - public GitHub build preview that cannot be minted without GitHub OAuth.
 - `/privacy` and `/terms` - data and builder-protection boundaries.
 - `/api/metadata/[username]` - ERC-721 metadata endpoint.
 - `/api/og/[username]` - dynamic social image endpoint.
 - `/api/stats` - live aggregate and latest-mint activity endpoint.
 
 Legacy `/commitcar` paths remain as compatibility routes, but all new links use `/garage`.
+
+## Admon Trace weekly collection
+
+Admon V1 remains the **Genesis collection**. Verified V1 records can be marked off-chain by the Genesis snapshot script after the cutoff below.
+
+**Admon Trace** is a separate weekly collection. It does **not** read or enforce the Genesis snapshot onchain or in the Solidity contract. Trace mints are independent weekly proofs: one authenticated GitHub owner can mint one new record per UTC Friday, identified onchain by `GitHub username + Friday date` (`weekKey`).
+
+Before deploying Admon Trace, add this server-only variable in Vercel and locally:
+
+```text
+NEXT_ADMON_TRACE_CONTRACT_ADDRESS=<deployed AdmonTrace address>
+```
+
+The Solidity source is [contracts/AdmonTrace.sol](./contracts/AdmonTrace.sol). Deploy it in Remix with:
+
+1. `initialBaseURI`: `https://admon.peerfix.dev/api/weekly-metadata/`
+2. `initialAuthorizedSigner`: the public address of `MONAD_TRACE_AUTHORIZER_PRIVATE_KEY`, or the existing `MONAD_AUTHORIZER_PRIVATE_KEY` if reusing the same signer.
+
+The contract resolves token metadata from this base URI instead of saving a full URL per token. When Admon has its own metadata domain, the contract owner can call `setBaseURI` and indexers receive an ERC-4906 metadata update event. Keep `admon.peerfix.dev` serving V1 metadata because V1 token URLs were stored at mint time.
+
+Use the same EIP-712 authorizer key as V1 by default, or define `MONAD_TRACE_AUTHORIZER_PRIVATE_KEY` to use a separate Trace signer.
+
+Related app routes:
+
+- `/builder/[username]` - builder ledger, Genesis badge when snapshotted, and Friday Trace mint.
+- `/api/weekly-mint-authorization` / `/api/weekly-finalize-mint` - Trace mint auth and receipt.
+- `/api/weekly-metadata/[username]/[weekKey]` / `/api/weekly-image/[username]/[weekKey]` - Trace token metadata and image.
+
+Concept sketches live under [docs/](./docs/).
+
+### Genesis snapshot
+
+Genesis is an **off-chain database marking** of V1 `Car` records (and linked `Builder` rows). Neither `Admon.sol` nor `AdmonTrace.sol` stores Genesis numbers or the snapshot cutoff.
+
+Eligibility: every persisted, GitHub-authenticated V1 build record with `createdAt` on or before **`2026-07-24T14:23:00Z`** (2:23 PM UTC / 3:23 PM Nigeria WAT). Anonymous previews do not create a database record and are not eligible.
+
+The script refuses to run until that cutoff has passed. After applying the Prisma schema to the target database, inspect the deterministic snapshot first:
+
+```bash
+npm run genesis:snapshot
+```
+
+Then write it once you have reviewed the displayed order:
+
+```bash
+npm run genesis:snapshot -- --apply
+```
+
+The script assigns Genesis numbers in verified-record creation order, using the database ID as a stable tie-breaker. It is idempotent: rerunning it preserves the same numbers.
 
 ## Spark submission checklist
 

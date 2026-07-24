@@ -23,6 +23,10 @@ export default function TermsPage() {
           <p>Minting is an onchain action on Monad Mainnet. You are responsible for your wallet, MON gas fees, and reviewing the transaction in your wallet. Admon does not custody funds or private keys.</p>
         </section>
         <section>
+          <h2>Builder connections</h2>
+          <p>Connection requests are opt-in. Do not use them to harass, spam, impersonate, or collect another builder&apos;s personal information. Admon may limit or remove connection access to protect builders and the service.</p>
+        </section>
+        <section>
           <h2>No guarantee of achievement</h2>
           <p>Build Scores and vehicle traits summarize public GitHub signals. They are not an employment credential, financial product, ranking of personal worth, or guarantee of any outcome.</p>
         </section>

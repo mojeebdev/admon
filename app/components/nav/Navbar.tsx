@@ -26,6 +26,9 @@ export function Navbar() {
         <Link href="/garage" className={pathname?.startsWith('/garage') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
           [GARAGE]
         </Link>
+        <Link href="/preview" className={pathname?.startsWith('/preview') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
+          [PREVIEW]
+        </Link>
         <WalletConnect />
         <button
           type="button"
@@ -42,6 +45,7 @@ export function Navbar() {
       {menuOpen && (
         <div className="nav-terminal__mobile-menu">
           <Link href="/garage" onClick={() => setMenuOpen(false)}>Garage</Link>
+          <Link href="/preview" onClick={() => setMenuOpen(false)}>Preview</Link>
           <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
           <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
           <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>

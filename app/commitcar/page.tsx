@@ -72,7 +72,7 @@ export default async function GaragePage({
               });
               const dataUri = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
               return (
-                <Link key={car.id} href={`/garage/${car.githubUsername}`} className="hall__card">
+                <Link key={car.id} href={`/builder/${car.githubUsername}`} className="hall__card">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={dataUri} alt={`Admon vehicle for ${car.githubUsername}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
                   <div className="hall__card__meta">
@@ -81,6 +81,7 @@ export default async function GaragePage({
                       {rarity.label}{car.mintedAt ? ' · minted' : ''}
                     </span>
                   </div>
+                  {car.genesisNumber && <span className="hall__card__genesis">Genesis #{car.genesisNumber}</span>}
                   <span className="hall__card__commits">{car.totalCommits.toLocaleString()} public commits</span>
                 </Link>
               );

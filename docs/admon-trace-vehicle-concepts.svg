@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1180" viewBox="0 0 1600 1180" role="img" aria-labelledby="title desc">
+  <title id="title">Admon Trace vehicle design concepts</title>
+  <desc id="desc">Four original vehicle directions for the Admon proof of build collection.</desc>
+  <defs>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#c7d9d7" stroke-width="1"/></pattern>
+    <style>
+      .paper{fill:#f8f7f1}.ink{fill:#123341}.muted{fill:#66808a}.coral{fill:#f26445}.line{stroke:#b7cecb;stroke-width:2}.label{font:700 14px monospace;letter-spacing:2px}.copy{font:500 16px Arial,sans-serif}.title{font:700 38px Arial,sans-serif;letter-spacing:-1px}.tiny{font:600 12px monospace;letter-spacing:1.5px}.dark{fill:#143f50}.glass{fill:#263b4a}.red{fill:#e94c36}.blue{fill:#4c9ef5}.cream{fill:#f8f7f1}
+    </style>
+  </defs>
+  <rect width="1600" height="1180" fill="#edf5f3"/><rect width="1600" height="1180" fill="url(#grid)" opacity=".8"/>
+  <text x="88" y="82" class="label coral">ADMON // TRACE</text><text x="88" y="132" class="title ink">A proof machine, not a borrowed supercar.</text>
+  <text x="88" y="166" class="copy muted">Every version keeps an audit rail, history canopy, record plate, and signature rear commit bar.</text>
+  <!-- card 1 -->
+  <g transform="translate(88 220)"><rect width="684" height="390" class="paper" stroke="#b7cecb" stroke-width="2"/>
+    <text x="30" y="40" class="label coral">01 / TRACE MONOCOQUE</text><text x="30" y="72" class="copy muted">Recommended core. Calm, precise, unmistakably Admon.</text>
+    <rect x="30" y="102" width="624" height="210" rx="4" class="dark"/><text x="48" y="126" class="tiny" fill="#b8d4d9">GENERATED VEHICLE // BUILD TRAIL</text>
+    <path d="M104 258 L174 211 L314 190 L441 194 L536 229 L593 255 L580 275 L122 282 Z" class="red"/>
+    <path d="M174 211 L247 170 L374 172 L441 194 L314 190 Z" class="glass"/>
+    <path d="M118 266 C235 282 420 278 581 258" fill="none" stroke="#ff9d7e" stroke-width="6"/>
+    <path d="M140 250 L548 242" fill="none" stroke="#1b262d" stroke-width="5"/>
+    <path d="M100 286 L588 286" fill="none" stroke="#7ea2a8" stroke-width="3"/>
+    <circle cx="208" cy="275" r="33" fill="#111b22"/><circle cx="208" cy="275" r="20" fill="#637580"/><circle cx="486" cy="268" r="34" fill="#111b22"/><circle cx="486" cy="268" r="20" fill="#637580"/>
+    <rect x="338" y="244" width="84" height="22" rx="3" class="cream"/><text x="351" y="259" class="tiny ink" style="font-size:8px">TRACE/01</text>
+    <text x="30" y="348" class="tiny ink">AUDIT RAIL</text><text x="182" y="348" class="tiny ink">HISTORY CANOPY</text><text x="404" y="348" class="tiny ink">COMMIT BAR</text>
+  </g>
+  <!-- card 2 -->
+  <g transform="translate(828 220)"><rect width="684" height="390" class="paper" stroke="#b7cecb" stroke-width="2"/>
+    <text x="30" y="40" class="label coral">02 / TRACE RELAY</text><text x="30" y="72" class="copy muted">Cab-forward connection variant for collaboration.</text>
+    <rect x="30" y="102" width="624" height="210" rx="4" class="dark"/><text x="48" y="126" class="tiny" fill="#b8d4d9">GENERATED VEHICLE // BUILDER RELAY</text>
+    <path d="M110 262 L167 207 L288 179 L391 178 L521 222 L594 252 L579 277 L119 282 Z" class="blue"/>
+    <path d="M167 207 L251 156 L366 160 L428 197 L288 179 Z" class="glass"/>
+    <path d="M122 260 L568 251" fill="none" stroke="#a6d5ff" stroke-width="5"/>
+    <path d="M172 199 L405 202" fill="none" stroke="#f8f7f1" stroke-width="3"/>
+    <path d="M103 286 L588 286" fill="none" stroke="#7ea2a8" stroke-width="3"/>
+    <circle cx="211" cy="275" r="33" fill="#111b22"/><circle cx="211" cy="275" r="20" fill="#637580"/><circle cx="489" cy="268" r="34" fill="#111b22"/><circle cx="489" cy="268" r="20" fill="#637580"/>
+    <rect x="347" y="241" width="80" height="21" rx="3" class="cream"/><text x="359" y="255" class="tiny ink" style="font-size:8px">RELAY/01</text>
+    <text x="30" y="348" class="tiny ink">BRIDGE ROOFLINE</text><text x="250" y="348" class="tiny ink">TWIN SIGNAL LINES</text>
+  </g>
+  <!-- card 3 -->
+  <g transform="translate(88 660)"><rect width="684" height="390" class="paper" stroke="#b7cecb" stroke-width="2"/>
+    <text x="30" y="40" class="label coral">03 / TRACE ARCHIVE</text><text x="30" y="72" class="copy muted">Long-tail record carrier. Best reserved for Genesis.</text>
+    <rect x="30" y="102" width="624" height="210" rx="4" class="dark"/><text x="48" y="126" class="tiny" fill="#b8d4d9">GENERATED VEHICLE // ARCHIVE EDITION</text>
+    <path d="M93 259 L155 217 L276 194 L426 198 L569 238 L601 261 L579 280 L110 283 Z" fill="#c88d35"/>
+    <path d="M155 217 L226 174 L359 178 L426 198 L276 194 Z" class="glass"/>
+    <path d="M108 266 L584 255" fill="none" stroke="#f1cb7d" stroke-width="5"/>
+    <path d="M97 287 L593 287" fill="none" stroke="#7ea2a8" stroke-width="3"/>
+    <circle cx="196" cy="276" r="33" fill="#111b22"/><circle cx="196" cy="276" r="20" fill="#637580"/><circle cx="501" cy="270" r="34" fill="#111b22"/><circle cx="501" cy="270" r="20" fill="#637580"/>
+    <rect x="337" y="247" width="94" height="20" rx="3" class="cream"/><text x="351" y="260" class="tiny ink" style="font-size:8px">GENESIS/01</text>
+    <text x="30" y="348" class="tiny ink">SERIAL PLATE</text><text x="198" y="348" class="tiny ink">ARCHIVE FINISH</text><text x="410" y="348" class="tiny ink">LONG RECORD TAIL</text>
+  </g>
+  <!-- card 4 -->
+  <g transform="translate(828 660)"><rect width="684" height="390" class="paper" stroke="#b7cecb" stroke-width="2"/>
+    <text x="30" y="40" class="label coral">04 / TRACE FORGE</text><text x="30" y="72" class="copy muted">High-output edition. Strong but closest to generic muscle styling.</text>
+    <rect x="30" y="102" width="624" height="210" rx="4" class="dark"/><text x="48" y="126" class="tiny" fill="#b8d4d9">GENERATED VEHICLE // HIGH OUTPUT</text>
+    <path d="M100 264 L156 215 L280 199 L395 203 L528 228 L596 253 L577 278 L111 283 Z" fill="#e05c47"/>
+    <path d="M156 215 L226 168 L345 174 L395 203 L280 199 Z" class="glass"/>
+    <path d="M112 261 L573 251" fill="none" stroke="#ffb096" stroke-width="5"/>
+    <path d="M155 230 L209 236 M247 218 L296 230 M422 218 L475 234" class="line" stroke="#74251e"/>
+    <path d="M100 287 L590 287" fill="none" stroke="#7ea2a8" stroke-width="3"/>
+    <circle cx="200" cy="276" r="35" fill="#111b22"/><circle cx="200" cy="276" r="21" fill="#637580"/><circle cx="499" cy="270" r="35" fill="#111b22"/><circle cx="499" cy="270" r="21" fill="#637580"/>
+    <rect x="342" y="247" width="84" height="20" rx="3" class="cream"/><text x="355" y="260" class="tiny ink" style="font-size:8px">FORGE/01</text>
+    <text x="30" y="348" class="tiny ink">MODULAR PANELS</text><text x="220" y="348" class="tiny ink">OUTPUT AERO</text>
+  </g>
+  <text x="88" y="1114" class="tiny muted">ADMON DESIGN PRINCIPLE: THE RECORD LEADS. THE CAR IS ITS SHAREABLE SIGNATURE.</text>
+</svg>

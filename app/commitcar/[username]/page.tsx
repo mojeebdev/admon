@@ -6,6 +6,7 @@ import { Navbar } from '@/app/components/nav/Navbar';
 import { renderCarSVG } from '@/app/lib/carRenderer';
 import { RARITY_LABELS, type CarTraits, type StatsSnapshot } from '@/app/lib/traits';
 import { MintButton } from '@/app/components/car/MintButton';
+import { InteractiveVehicle } from '@/app/components/car/InteractiveVehicle';
 import { appUrl, contractAddress, MONAD_EXPLORER_URL, openSeaAssetUrl } from '@/app/lib/monad';
 
 export const revalidate = 60;
@@ -101,10 +102,16 @@ export default async function ProofPage({
           <section className="car-page__showcase" aria-label="Vehicle and public build signals">
             <div className="car-page__vehicle">
               <p className="car-page__panel-label">Generated vehicle</p>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <InteractiveVehicle
                 src={dataUri}
                 alt={`Admon vehicle created from ${car.githubUsername}'s public GitHub build history`}
+                details={[
+                  { label: 'Chassis', value: 'Trace Meridian' },
+                  { label: 'Paint', value: traits.paint },
+                  { label: 'Finish', value: traits.finish },
+                  { label: 'Aero', value: traits.aero },
+                  { label: 'Drive signal', value: `${stats.commits365d.toLocaleString()} commits` },
+                ]}
               />
             </div>
 

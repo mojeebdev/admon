@@ -30,6 +30,13 @@ model Car {
   ownerAddress   String?
   imageUrl       String?
 
+  // V1 Genesis snapshot. Legacy records remain immutable after snapshotting.
+  isGenesis      Boolean   @default(false)
+  genesisNumber  Int?      @unique
+  genesisAt      DateTime?
+  builderId      String?
+  builder        Builder?  @relation("BuilderLegacyCars", fields: [builderId], references: [id], onDelete: SetNull)
+
   // Share + analytics
   shareCount     Int       @default(0)
   viewCount      Int       @default(0)
@@ -40,4 +47,65 @@ model Car {
   @@index([mintedAt])
   @@index([rarityScore])
   @@index([totalCommits])
+  @@index([builderId])
+}
+
+model Builder {
+  id                  String              @id @default(cuid())
+  githubUsername      String              @unique
+  githubId            Int?                @unique
+  avatarUrl           String?
+  name                String?
+  bio                 String?
+  genesisNumber       Int?                @unique
+  genesisAt           DateTime?
+  legacyCars          Car[]               @relation("BuilderLegacyCars")
+  records             BuildRecord[]
+  sentConnections     ConnectionRequest[] @relation("ConnectionSender")
+  receivedConnections ConnectionRequest[] @relation("ConnectionRecipient")
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@index([genesisNumber])
+}
+
+model BuildRecord {
+  id              String   @id @default(cuid())
+  builderId       String
+  builder         Builder  @relation(fields: [builderId], references: [id], onDelete: Cascade)
+  weekKey         String
+  traits          Json
+  statsSnapshot   Json
+  totalCommits    Int      @default(0)
+  rarityScore     Int
+  rarityTier      String
+  contractVersion String   @default("v2")
+  contractAddress String?
+  mintedAt        DateTime?
+  tokenId         Int?
+  mintTxHash      String?
+  ownerAddress    String?
+  imageUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([builderId, weekKey])
+  @@unique([contractAddress, tokenId])
+  @@index([builderId, createdAt])
+  @@index([mintedAt])
+}
+
+model ConnectionRequest {
+  id          String   @id @default(cuid())
+  senderId    String
+  recipientId String
+  status      String   @default("pending")
+  respondedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sender      Builder  @relation("ConnectionSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   Builder  @relation("ConnectionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, recipientId])
+  @@index([recipientId, status, createdAt])
 }
