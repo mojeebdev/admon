@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WalletConnect } from '../wallet/WalletConnect';
@@ -8,7 +8,17 @@ import { WalletConnect } from '../wallet/WalletConnect';
 export function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [builderUsername, setBuilderUsername] = useState<string | null>(null);
   const path = pathname === '/' ? '~/verify' : `~${pathname}`;
+
+  useEffect(() => {
+    fetch('/api/github/session')
+      .then((response) => response.ok ? response.json() : null)
+      .then((session) => setBuilderUsername(session?.authenticated && session.hasAdmonRecord ? session.login : null))
+      .catch(() => setBuilderUsername(null));
+  }, []);
+
+  const builderHref = builderUsername ? '/builder' : null;
   return (
     <nav className="nav-terminal">
       <Link href="/" className="nav-terminal__logo" aria-label="Admon home">
@@ -29,6 +39,11 @@ export function Navbar() {
         <Link href="/preview" className={pathname?.startsWith('/preview') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
           [PREVIEW]
         </Link>
+        {builderHref && (
+          <Link href={builderHref} className={pathname?.startsWith('/builder') ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
+            [BUILDER]
+          </Link>
+        )}
         <WalletConnect />
         <button
           type="button"
@@ -46,6 +61,7 @@ export function Navbar() {
         <div className="nav-terminal__mobile-menu">
           <Link href="/garage" onClick={() => setMenuOpen(false)}>Garage</Link>
           <Link href="/preview" onClick={() => setMenuOpen(false)}>Preview</Link>
+          {builderHref && <Link href={builderHref} onClick={() => setMenuOpen(false)}>Builders</Link>}
           <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
           <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
           <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>
