@@ -8,11 +8,12 @@ type Request = {
   sender: { githubUsername: string; name: string | null; avatarUrl: string | null };
 };
 
-type InboxPayload = { ownerUsername?: string; requests?: Request[] };
+type SentRequest = { id: string; status: 'pending' | 'accepted' | 'declined'; recipient: Request['sender'] };
+type InboxPayload = { requests?: Request[]; sent?: SentRequest[] };
 
-export function ConnectionInbox({ profileUsername }: { profileUsername: string }) {
+export function ConnectionInbox() {
   const [requests, setRequests] = useState<Request[] | null>(null);
-  const [ownerUsername, setOwnerUsername] = useState<string | null>(null);
+  const [sent, setSent] = useState<SentRequest[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,8 +22,8 @@ export function ConnectionInbox({ profileUsername }: { profileUsername: string }
       .then((response) => response.ok ? response.json() : null)
       .then((payload: InboxPayload | null) => {
         if (!active) return;
-        setOwnerUsername(payload?.ownerUsername || null);
         setRequests(payload?.requests || []);
+        setSent(payload?.sent || []);
       })
       .catch(() => { if (active) setError('Could not load connection requests.'); });
     return () => { active = false; };
@@ -44,8 +45,7 @@ export function ConnectionInbox({ profileUsername }: { profileUsername: string }
     }
   }
 
-  if (ownerUsername?.toLowerCase() !== profileUsername.toLowerCase()) return null;
-  if (!requests?.length && !error) return null;
+  if (!requests?.length && !sent?.length && !error) return null;
   return (
     <section className="connection-inbox" aria-label="Connection requests">
       <span className="verify-panel__eyebrow">Your connection requests</span>
@@ -58,6 +58,15 @@ export function ConnectionInbox({ profileUsername }: { profileUsername: string }
             <button type="button" onClick={() => respond(request.id, 'accept')}>Accept</button>
             <button type="button" onClick={() => respond(request.id, 'decline')}>Decline</button>
           </div>
+        </div>
+      ))}
+      {!!sent?.length && <span className="verify-panel__eyebrow">Sent requests</span>}
+      {sent?.map((request) => (
+        <div className="connection-inbox__request" key={request.id}>
+          <Link href={`/builder/${encodeURIComponent(request.recipient.githubUsername)}`}>
+            @{request.recipient.githubUsername}{request.recipient.name ? ` · ${request.recipient.name}` : ''}
+          </Link>
+          <span className={request.status === 'accepted' ? 'connection-control__state connection-control__state--accepted' : 'connection-control__state'}>{request.status}</span>
         </div>
       ))}
       {error && <p role="alert">{error}</p>}

@@ -51,7 +51,8 @@ export function ConnectionControl({ username }: { username: string }) {
   }
   if (!state.profileEligible) return <span className="connection-control__state">Verify your own build record to connect with builders.</span>;
   if (state.status === 'accepted') return <span className="connection-control__state connection-control__state--accepted">Connected</span>;
-  if (state.status === 'pending' && state.direction === 'received') return <span className="connection-control__state">They sent you a request. Open your profile to respond.</span>;
+  // Incoming requests are intentionally private to the recipient's dashboard.
+  if (state.status === 'pending' && state.direction === 'received') return null;
   if (state.status === 'pending' || sending) return <span className="connection-control__state">Request pending</span>;
 
   return (

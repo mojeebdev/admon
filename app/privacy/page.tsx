@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </section>
         <section>
           <h2>Builder connections</h2>
-          <p>If you send or receive a builder connection request, Admon stores the two builder profiles, request status, and response time. Connection requests are private to the people involved. Admon does not provide public messaging or use connection data for advertising.</p>
+          <p>If you send or receive a builder connection request, Admon stores the two builder profiles, request status, and response time. After both builders accept a connection, Admon stores the private messages they choose to send in that conversation. Requests and conversations are visible only to the two connected builders and are not used for advertising.</p>
         </section>
         <section>
           <h2>Public records</h2>

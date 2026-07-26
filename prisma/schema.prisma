@@ -63,6 +63,7 @@ model Builder {
   records             BuildRecord[]
   sentConnections     ConnectionRequest[] @relation("ConnectionSender")
   receivedConnections ConnectionRequest[] @relation("ConnectionRecipient")
+  sentMessages        Message[]           @relation("MessageSender")
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
@@ -105,7 +106,33 @@ model ConnectionRequest {
   updatedAt   DateTime @updatedAt
   sender      Builder  @relation("ConnectionSender", fields: [senderId], references: [id], onDelete: Cascade)
   recipient   Builder  @relation("ConnectionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  conversation Conversation?
 
   @@unique([senderId, recipientId])
   @@index([recipientId, status, createdAt])
+}
+
+model Conversation {
+  id           String            @id @default(cuid())
+  connectionId String            @unique
+  connection   ConnectionRequest @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  messages     Message[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([updatedAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         Builder      @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  body           String       @db.VarChar(1000)
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([senderId, createdAt])
 }

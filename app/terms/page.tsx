@@ -24,7 +24,7 @@ export default function TermsPage() {
         </section>
         <section>
           <h2>Builder connections</h2>
-          <p>Connection requests are opt-in. Do not use them to harass, spam, impersonate, or collect another builder&apos;s personal information. Admon may limit or remove connection access to protect builders and the service.</p>
+          <p>Connection requests and accepted-only conversations are opt-in. Do not use them to harass, spam, impersonate, or collect another builder&apos;s personal information. Admon may limit or remove connection or conversation access to protect builders and the service.</p>
         </section>
         <section>
           <h2>No guarantee of achievement</h2>

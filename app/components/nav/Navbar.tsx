@@ -44,6 +44,11 @@ export function Navbar() {
             [BUILDER]
           </Link>
         )}
+        {builderHref && (
+          <Link href="/profile" className={pathname === '/profile' ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
+            [PROFILE]
+          </Link>
+        )}
         <WalletConnect />
         <button
           type="button"
@@ -62,6 +67,7 @@ export function Navbar() {
           <Link href="/garage" onClick={() => setMenuOpen(false)}>Garage</Link>
           <Link href="/preview" onClick={() => setMenuOpen(false)}>Preview</Link>
           {builderHref && <Link href={builderHref} onClick={() => setMenuOpen(false)}>Builders</Link>}
+          {builderHref && <Link href="/profile" onClick={() => setMenuOpen(false)}>My profile</Link>}
           <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
           <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
           <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>

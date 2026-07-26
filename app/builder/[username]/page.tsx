@@ -3,13 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Navbar } from '@/app/components/nav/Navbar';
 import { ConnectionControl } from '@/app/components/builder/ConnectionControl';
-import { ConnectionInbox } from '@/app/components/builder/ConnectionInbox';
-import { WeeklyMintButton } from '@/app/components/builder/WeeklyMintButton';
 import { renderCarSVG } from '@/app/lib/carRenderer';
 import { findBuilderByUsername } from '@/app/lib/builders';
 import { prisma } from '@/app/lib/prisma';
 import type { CarTraits } from '@/app/lib/traits';
-import { weeklyContractAddress } from '@/app/lib/monad';
 
 type BuilderPageProps = { params: Promise<{ username: string }> };
 
@@ -69,8 +66,7 @@ export default async function BuilderProfilePage({ params }: BuilderPageProps) {
           </div>
         </header>
 
-        <div className="builder-page__dashboard">
-          <section className="builder-ledger" aria-labelledby="records-title">
+        <section className="builder-ledger" aria-labelledby="records-title">
             <div className="builder-ledger__header">
               <div>
                 <span className="verify-panel__eyebrow">Build history</span>
@@ -111,35 +107,16 @@ export default async function BuilderProfilePage({ params }: BuilderPageProps) {
                 </article>
               ))}
             </div>
-          </section>
+        </section>
 
-          <aside className="builder-page__aside">
-            <section className="builder-page__connection">
-              <span className="verify-panel__eyebrow">Builder connections</span>
-              <h2>Collaboration over consistency.</h2>
-              <p>
-                Verified builders can send a connection request. The other builder chooses whether to
-                accept it. Messaging will only be considered after both people agree to connect.
-              </p>
-              <div className="builder-page__connection-action">
-                <ConnectionControl username={githubUsername} />
-              </div>
-              <ConnectionInbox profileUsername={githubUsername} />
-            </section>
-
-            <section className="builder-page__weekly">
-              <span className="verify-panel__eyebrow">Weekly record</span>
-              <h2>Refresh your proof every Friday.</h2>
-              <p>
-                Admon Trace creates one fresh, wallet-bound build record for the authenticated GitHub
-                owner each Friday UTC. Your prior cars stay in this ledger.
-              </p>
-              <div className="builder-page__connection-action">
-                <WeeklyMintButton username={githubUsername} contractAddress={weeklyContractAddress()} />
-              </div>
-            </section>
-          </aside>
-        </div>
+        <section className="builder-page__connection builder-page__connection--public">
+          <span className="verify-panel__eyebrow">Builder connections</span>
+          <h2>Collaboration over consistency.</h2>
+          <p>Verified builders can request a connection. Requests, Friday mints, and conversations stay private in each builder&apos;s own profile.</p>
+          <div className="builder-page__connection-action">
+            <ConnectionControl username={githubUsername} />
+          </div>
+        </section>
       </main>
     </div>
   );

@@ -59,7 +59,11 @@ export function createGitHubSession(user: Omit<GitHubSession, 'issuedAt'>) {
 }
 
 export function readGitHubSession(request: NextRequest): GitHubSession | null {
-  const session = decode<GitHubSession>(request.cookies.get(SESSION_COOKIE)?.value);
+  return readGitHubSessionValue(request.cookies.get(SESSION_COOKIE)?.value);
+}
+
+export function readGitHubSessionValue(value: string | undefined): GitHubSession | null {
+  const session = decode<GitHubSession>(value);
   if (!session || Date.now() - session.issuedAt > 7 * 24 * 60 * 60 * 1000) return null;
   return session;
 }

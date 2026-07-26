@@ -20,12 +20,19 @@ export async function GET(request: NextRequest) {
   if (!builder) return NextResponse.json({ authenticated: true, profileEligible: false });
 
   if (inbox) {
-    const requests = await prisma.connectionRequest.findMany({
+    const [requests, sent] = await Promise.all([
+      prisma.connectionRequest.findMany({
       where: { recipientId: builder.id, status: 'pending' },
       orderBy: { createdAt: 'desc' },
       include: { sender: { select: { githubUsername: true, name: true, avatarUrl: true } } },
-    });
-    return NextResponse.json({ authenticated: true, profileEligible: true, ownerUsername: builder.githubUsername, requests });
+      }),
+      prisma.connectionRequest.findMany({
+        where: { senderId: builder.id },
+        orderBy: { updatedAt: 'desc' },
+        include: { recipient: { select: { githubUsername: true, name: true, avatarUrl: true } } },
+      }),
+    ]);
+    return NextResponse.json({ authenticated: true, profileEligible: true, ownerUsername: builder.githubUsername, requests, sent });
   }
 
   if (!targetUsername) return NextResponse.json({ authenticated: true, profileEligible: true });
@@ -65,7 +72,7 @@ export async function POST(request: NextRequest) {
     where: { senderId_recipientId: { senderId: target.id, recipientId: builder.id } },
   });
   if (reverse?.status === 'accepted') return NextResponse.json({ status: 'accepted' });
-  if (reverse?.status === 'pending') return NextResponse.json({ error: 'This builder has already sent you a request. Open your profile to respond.' }, { status: 409 });
+  if (reverse?.status === 'pending') return NextResponse.json({ error: 'You already have a pending incoming connection request.' }, { status: 409 });
 
   const connection = await prisma.connectionRequest.upsert({
     where: { senderId_recipientId: { senderId: builder.id, recipientId: target.id } },

@@ -7,15 +7,15 @@ export const runtime = 'nodejs';
 export async function GET(request: NextRequest) {
   const session = readGitHubSession(request);
   if (!session) return NextResponse.json({ authenticated: false });
-  const hasAdmonRecord = await prisma.car.findFirst({
-    where: { githubUsername: { equals: session.login, mode: 'insensitive' } },
-    select: { id: true },
-  });
+  const [legacyRecord, builder] = await Promise.all([
+    prisma.car.findFirst({ where: { githubUsername: { equals: session.login, mode: 'insensitive' } }, select: { id: true } }),
+    prisma.builder.findFirst({ where: { githubUsername: { equals: session.login, mode: 'insensitive' } }, select: { id: true } }),
+  ]);
   return NextResponse.json({
     authenticated: true,
     login: session.login,
     avatarUrl: session.avatarUrl,
     name: session.name,
-    hasAdmonRecord: Boolean(hasAdmonRecord),
+    hasAdmonRecord: Boolean(legacyRecord || builder),
   });
 }
