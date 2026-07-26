@@ -120,6 +120,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transition: color .2s ease;
 }
 .nav-terminal__hall:hover, .nav-terminal__hall.active, .nav-terminal__cta:hover { color: var(--accent); }
+.nav-terminal__badge, .nav-terminal__mobile-badge { display: inline-grid; min-width: 15px; height: 15px; margin-left: 5px; place-items: center; border-radius: 999px; color: #fff; background: var(--accent); font-family: var(--font-accent); font-size: 8px; font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1; vertical-align: middle; }
 .nav-terminal__menu {
   display: none;
   width: 28px;
@@ -1197,6 +1198,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .cta-cluster { align-items: flex-start; flex-direction: column; }
   .mint-ticker__username { min-width: 0; max-width: 100%; }
 }
+.conversations__list button { position: relative; }
+.conversations__list button em { position: absolute; top: 10px; right: 10px; display: grid; min-width: 17px; height: 17px; padding: 0 4px; place-items: center; border-radius: 999px; color: #fff; background: var(--accent); font-family: var(--font-accent); font-size: 8px; font-style: normal; font-weight: 700; letter-spacing: 0; line-height: 1; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

@@ -11,11 +11,24 @@ export async function GET(request: NextRequest) {
     prisma.car.findFirst({ where: { githubUsername: { equals: session.login, mode: 'insensitive' } }, select: { id: true } }),
     prisma.builder.findFirst({ where: { githubUsername: { equals: session.login, mode: 'insensitive' } }, select: { id: true } }),
   ]);
+  const unreadMessages = builder ? await prisma.message.count({
+    where: {
+      readAt: null,
+      senderId: { not: builder.id },
+      conversation: {
+        connection: {
+          status: 'accepted',
+          OR: [{ senderId: builder.id }, { recipientId: builder.id }],
+        },
+      },
+    },
+  }) : 0;
   return NextResponse.json({
     authenticated: true,
     login: session.login,
     avatarUrl: session.avatarUrl,
     name: session.name,
     hasAdmonRecord: Boolean(legacyRecord || builder),
+    unreadMessages,
   });
 }

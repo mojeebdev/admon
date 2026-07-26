@@ -21,14 +21,26 @@ export async function GET(request: NextRequest) {
     include: {
       sender: { select: { id: true, githubUsername: true, name: true, avatarUrl: true } },
       recipient: { select: { id: true, githubUsername: true, name: true, avatarUrl: true } },
-      conversation: { select: { id: true, updatedAt: true } },
+      conversation: {
+        select: {
+          id: true,
+          updatedAt: true,
+          _count: { select: { messages: { where: { readAt: null, senderId: { not: builder.id } } } } },
+        },
+      },
     },
   });
 
   return NextResponse.json({
     conversations: connections.map((connection) => {
       const other = connection.senderId === builder.id ? connection.recipient : connection.sender;
-      return { connectionId: connection.id, conversationId: connection.conversation?.id || null, updatedAt: connection.conversation?.updatedAt || connection.updatedAt, other };
+      return {
+        connectionId: connection.id,
+        conversationId: connection.conversation?.id || null,
+        updatedAt: connection.conversation?.updatedAt || connection.updatedAt,
+        unreadCount: connection.conversation?._count.messages || 0,
+        other,
+      };
     }),
   });
 }

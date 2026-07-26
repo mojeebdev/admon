@@ -9,13 +9,32 @@ export function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [builderUsername, setBuilderUsername] = useState<string | null>(null);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const path = pathname === '/' ? '~/verify' : `~${pathname}`;
 
   useEffect(() => {
-    fetch('/api/github/session')
-      .then((response) => response.ok ? response.json() : null)
-      .then((session) => setBuilderUsername(session?.authenticated && session.hasAdmonRecord ? session.login : null))
-      .catch(() => setBuilderUsername(null));
+    let active = true;
+    const loadSession = () => {
+      fetch('/api/github/session')
+        .then((response) => response.ok ? response.json() : null)
+        .then((session) => {
+          if (!active) return;
+          const hasRecord = Boolean(session?.authenticated && session.hasAdmonRecord);
+          setBuilderUsername(hasRecord ? session.login : null);
+          setUnreadMessages(hasRecord ? Number(session.unreadMessages || 0) : 0);
+        })
+        .catch(() => {
+          if (!active) return;
+          setBuilderUsername(null);
+          setUnreadMessages(0);
+        });
+    };
+    loadSession();
+    const interval = window.setInterval(loadSession, 20_000);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
   }, []);
 
   const builderHref = builderUsername ? '/builder' : null;
@@ -46,7 +65,7 @@ export function Navbar() {
         )}
         {builderHref && (
           <Link href="/profile" className={pathname === '/profile' ? 'nav-terminal__hall active' : 'nav-terminal__hall'}>
-            [PROFILE]
+            [PROFILE]{unreadMessages > 0 && <span className="nav-terminal__badge">{unreadMessages > 9 ? '9+' : unreadMessages}</span>}
           </Link>
         )}
         <WalletConnect />
@@ -67,7 +86,7 @@ export function Navbar() {
           <Link href="/garage" onClick={() => setMenuOpen(false)}>Garage</Link>
           <Link href="/preview" onClick={() => setMenuOpen(false)}>Preview</Link>
           {builderHref && <Link href={builderHref} onClick={() => setMenuOpen(false)}>Builders</Link>}
-          {builderHref && <Link href="/profile" onClick={() => setMenuOpen(false)}>My profile</Link>}
+          {builderHref && <Link href="/profile" onClick={() => setMenuOpen(false)}>My profile{unreadMessages > 0 && <span className="nav-terminal__mobile-badge">{unreadMessages > 9 ? '9+' : unreadMessages}</span>}</Link>}
           <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
           <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
           <a href="https://github.com/mojeebdev/admon" target="_blank" rel="noreferrer">GitHub</a>

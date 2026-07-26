@@ -3,7 +3,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 
 type Builder = { id: string; githubUsername: string; name: string | null; avatarUrl: string | null };
-type ConversationSummary = { connectionId: string; conversationId: string | null; updatedAt: string; other: Builder };
+type ConversationSummary = { connectionId: string; conversationId: string | null; updatedAt: string; unreadCount: number; other: Builder };
 type ChatMessage = { id: string; body: string; senderId: string; createdAt: string; sender: { githubUsername: string } };
 
 export function ConversationsPanel() {
@@ -57,6 +57,7 @@ export function ConversationsPanel() {
       const next = { ...summary, conversationId };
       setActive(next);
       await loadMessages(conversationId);
+      void loadConversations();
     } catch (openError) {
       setError(openError instanceof Error ? openError.message : 'Could not open this conversation.');
     }
@@ -93,6 +94,7 @@ export function ConversationsPanel() {
             {conversation.other.avatarUrl ? <img src={conversation.other.avatarUrl} alt="" /> : <span>@</span>}
             <strong>@{conversation.other.githubUsername}</strong>
             <small>{conversation.conversationId ? 'Open conversation' : 'Start conversation'}</small>
+            {conversation.unreadCount > 0 && <em>{conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}</em>}
           </button>
         ))}
       </div>
